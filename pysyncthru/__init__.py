@@ -68,14 +68,21 @@ class SyncThru(object):
         Crunch the latest data about the main system
         Returns a dict mapping each key name to value and unit
         And sets the internal attribute "data" to the dict
+        
+        Return the data or an empty dictionary on failure
         '''
         # load json data from delivered ip
         # This data sadly is no valid json => use demjson for parsing
         syncthru_json_path = "/sws/app/information/home/home.json"
         # get data by JSON API
-        r = requests.get(self.ip + syncthru_json_path)
-        
-        json_dict = demjson.decode(r.text)
+        try:
+            r = requests.get(self.ip + syncthru_json_path)
+            
+            json_dict = demjson.decode(r.text)
+        except requests.exceptions.ConnectionError as e:
+            json_dict = {'status':{'status1':'Offline'}}
+        except Exception as e:
+            json_dict = {}
         # make data accessible from outside
         self.data = json_dict
         return json_dict
@@ -89,6 +96,7 @@ class SyncThru(object):
             '  Sleeping...   ': 'Sleeping',
             ' Ready to Copy  ': 'Ready',
             '   Warming Up   ': 'Warming up',
+            'Offline'         : 'Offline',
         }.get(status, 'Unknown')
 
     def model(self):

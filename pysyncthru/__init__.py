@@ -178,13 +178,14 @@ class SyncThru(object):
         '''
         tray_status = {}
         try:
-            trayStat = self.data.get("outputTray", [['0', '0', 'Unknown']])[0]
+            trayStat = self.data.get("outputTray", [])
             # Meaning extracted from /sws/app/information/home/home.js
             # { fields: [ {name: 'name'},
             #  {name: 'capacity'}, {name: 'status'} ] })
-            tray_status['name'] = trayStat[0]
-            tray_status['capacity'] = trayStat[1]
-            tray_status['status'] = trayStat[2]
+            for i in range(0, len(trayStat)):
+                tray_status['name'] = trayStat[i][0]
+                tray_status['capacity'] = trayStat[i][1]
+                tray_status['status'] = trayStat[i][2]
 
         except Exception as e:
             tray_status = {}

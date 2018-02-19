@@ -183,9 +183,10 @@ class SyncThru(object):
             # { fields: [ {name: 'name'},
             #  {name: 'capacity'}, {name: 'status'} ] })
             for i in range(0, len(trayStat)):
-                tray_status['name'] = trayStat[i][0]
-                tray_status['capacity'] = trayStat[i][1]
-                tray_status['status'] = trayStat[i][2]
+                tray_status[i] = {}
+                tray_status[i]['name'] = trayStat[i][0]
+                tray_status[i]['capacity'] = trayStat[i][1]
+                tray_status[i]['status'] = trayStat[i][2]
 
         except Exception as e:
             tray_status = {}

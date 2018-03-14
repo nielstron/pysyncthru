@@ -24,7 +24,7 @@ def test_syncthru(ip):
     # if the below works we can be pretty sure there is a fronius answering
     try:
         # get data by JSON API
-        r = requests.get(ip + syncthru_json_path)
+        r = requests.get(ip + syncthru_json_path, timeout=5)
 
         json_dict = demjson.decode(r.text)
         status = json_dict['status']['hrDeviceStatus']
@@ -32,7 +32,7 @@ def test_syncthru(ip):
         if status is not None:
             return True
         return False
-    except requests.exceptions.ConnectionError:
+    except requests.exceptions.RequestException:
         return False
     except KeyError:
         return False
@@ -82,12 +82,12 @@ class SyncThru(object):
         syncthru_json_path = "/sws/app/information/home/home.json"
         # get data by JSON API
         try:
-            r = requests.get(self.ip + syncthru_json_path)
+            r = requests.get(self.ip + syncthru_json_path, timeout=5)
 
             json_dict = demjson.decode(r.text)
-        except requests.exceptions.ConnectionError as e:
+        except requests.exceptions.RequestException:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
-        except Exception as e:
+        except Exception:
             json_dict = {}
         # make data accessible from outside
         self.data = json_dict
@@ -111,7 +111,7 @@ class SyncThru(object):
     def model(self):
         try:
             return self.data.get('identity').get('model_name')
-        except Exception as e:
+        except Exception:
             return self.deviceStatusSimplify('')
 
     def deviceStatus(self):
@@ -121,7 +121,7 @@ class SyncThru(object):
         try:
             return self.deviceStatusSimplify(self.data.get('status').get(
                 'status1'))
-        except Exception as e:
+        except Exception:
             return self.deviceStatusSimplify('')
 
     def systemStatus(self):
@@ -130,7 +130,7 @@ class SyncThru(object):
         '''
         try:
             return self.data.get('capability', {})
-        except Exception as e:
+        except Exception:
             return {}
 
     def tonerStatus(self, filter_supported=True):
@@ -150,7 +150,7 @@ class SyncThru(object):
                 else:
                     toner_status[color] = tonerStat
 
-            except Exception as e:
+            except Exception:
                 toner_status[color] = {}
         return toner_status
 
@@ -168,7 +168,7 @@ class SyncThru(object):
                 else:
                     tray_status[i] = trayStat
 
-            except Exception as e:
+            except Exception:
                 tray_status[i] = {}
         return tray_status
 
@@ -188,7 +188,7 @@ class SyncThru(object):
                 tray_status[i]['capacity'] = trayStat[i][1]
                 tray_status[i]['status'] = trayStat[i][2]
 
-        except Exception as e:
+        except Exception:
             tray_status = {}
         return tray_status
 
@@ -206,6 +206,6 @@ class SyncThru(object):
                 else:
                     drum_status[color] = drumStat
 
-            except Exception as e:
+            except Exception:
                 drum_status[color] = {}
         return drum_status

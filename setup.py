@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 from setuptools import setup, find_packages
 
 from codecs import open
@@ -9,9 +10,12 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+short_description = '{}'.format(
+    'Automated JSON API based communication with Samsung SyncThru Web Service')
+
 setup(name='PySyncThru',
       version='0.3.1',
-      description='Automated JSON API based communication with Samsung SyncThru Web Service',
+      description=short_description,
       author='Niels Mündler',
       author_email='n.muendler@web.de',
       url='https://github.com/nielstron/pysyncthru/',

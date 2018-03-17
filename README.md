@@ -22,7 +22,7 @@ needed!
 from pysyncthru import SyncThru
 syncthru = SyncThru('192.168.1.14')
 # Get the devices status
-syncthru.deviceStatus()
+syncthru.device_status()
 # Update the data
 syncthru.update()
 ```

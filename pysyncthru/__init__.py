@@ -1,34 +1,19 @@
-'''
-Connects to a Samsung printer with SyncThru service
-
-
-@author: Niels
-'''
-
+"""Connect to a Samsung printer with SyncThru service."""
 import requests
 import demjson
 
+ENDPOINT = "/sws/app/information/home/home.json"
+
+
 def test_syncthru(ip):
+    """Test whether an Samsung printer with Synthru answers under given IP."""
+    url = construct_url(ip)
 
-    '''
-    Tests whether an Samsung printer with Synthru answers under
-    given ip
-    Attributes:
-        ip      IP of the printer
-    '''
-
-    ip = verify_ip(ip)
-    # load json data from delivered ip
-    syncthru_json_path = "/sws/app/information/home/home.json"
-
-    # if the below works we can be pretty sure there is a fronius answering
+    # If the below works we can be pretty sure there is a fronius answering
     try:
-        # get data by JSON API
-        r = requests.get(ip + syncthru_json_path, timeout=5)
-
+        r = requests.get('{}{}'.format(url, ENDPOINT), timeout=5)
         json_dict = demjson.decode(r.text)
         status = json_dict['status']['hrDeviceStatus']
-
         if status is not None:
             return True
         return False
@@ -37,24 +22,18 @@ def test_syncthru(ip):
     except KeyError:
         return False
 
-def verify_ip(ip):
 
-    if "http://" not in ip and "https://" not in ip:
-        ip = "http://" + ip
+def construct_url(ip):
+    """Construct the URL with a given IP address."""
+    if 'http://' not in ip and 'https://' not in ip:
+        ip = '{}{}'.format('http://', ip)
     if ip[-1] == '/':
         del ip[-1]
     return ip
 
+
 class SyncThru(object):
-
-    '''
-    Interface to communicate with the Samsung Printer with SyncThru
-    over http / JSON
-    Attributes:
-        ip         The ip/domain of the printer
-        data        Received data from the printer
-    '''
-
+    """Interface to communicate with the Samsung Printer with SyncThru."""
     COLOR_NAMES = ['black', 'cyan', 'magenta', 'yellow']
     TONER = 'toner'
     DRUM = 'drum'
@@ -62,42 +41,26 @@ class SyncThru(object):
     OFFLINE = 'Offline'
 
     def __init__(self, ip):
-        '''
-        Constructor
-        '''
-        self.ip = verify_ip(ip)
+        """Initialize the connection to the printer."""
+        self.url = construct_url(ip)
         self.data = None
         self.update()
 
     def update(self):
-        '''
-        Crunch the latest data about the main system
-        Returns a dict mapping each key name to value and unit
-        And sets the internal attribute "data" to the dict
-
-        Return the data or an empty dictionary on failure
-        '''
-        # load json data from delivered ip
-        # This data sadly is no valid json => use demjson for parsing
-        syncthru_json_path = "/sws/app/information/home/home.json"
-        # get data by JSON API
+        """Retrieve the data from the printer."""
         try:
-            r = requests.get(self.ip + syncthru_json_path, timeout=5)
-
+            r = requests.get('{}{}'.format(self.url, ENDPOINT), timeout=5)
+            # This data sadly is no valid json => use demjson for parsing
             json_dict = demjson.decode(r.text)
         except requests.exceptions.RequestException:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
-        except Exception:
+        except (KeyError, ValueError):
             json_dict = {}
-        # make data accessible from outside
         self.data = json_dict
-        return json_dict
 
     @staticmethod
-    def deviceStatusSimplify(status):
-        '''
-        Convert the status1 field of the device status to a readable String
-        '''
+    def device_status_simple(status):
+        """Convert the status1 field of the device status to a string."""
         return {
             '  Sleeping...   ': 'Sleeping',
             ' Ready to Copy  ': 'Ready',
@@ -105,107 +68,107 @@ class SyncThru(object):
             SyncThru.OFFLINE: 'Offline',
         }.get(status, 'Unknown')
 
-    def isOnline(self):
-        return self.deviceStatus() != SyncThru.OFFLINE
+    def is_online(self):
+        """Return true if printer is online."""
+        return self.device_status() != SyncThru.OFFLINE
 
     def model(self):
+        """Return the model name of the printer."""
         try:
             return self.data.get('identity').get('model_name')
-        except Exception:
-            return self.deviceStatusSimplify('')
+        except (KeyError, AttributeError):
+            return self.device_status_simple('')
 
-    def deviceStatus(self):
-        '''
-        Return the status of the device as string
-        '''
+    def location(self):
+        """Return the location of the printer."""
         try:
-            return self.deviceStatusSimplify(self.data.get('status').get(
-                'status1'))
-        except Exception:
-            return self.deviceStatusSimplify('')
+            return self.data.get('identity').get('location')
+        except (KeyError, AttributeError):
+            return self.device_status_simple('')
 
-    def systemStatus(self):
-        '''
-        Return the status of the device system
-        '''
+    def serial_number(self):
+        """Return the serial number of the printer."""
+        try:
+            return self.data.get('identity').get('serial_num')
+        except (KeyError, AttributeError):
+            return self.device_status_simple('')
+
+    def hostname(self):
+        """Return the hostname of the printer."""
+        try:
+            return self.data.get('identity').get('host_name')
+        except (KeyError, AttributeError):
+            return self.device_status_simple('')
+
+    def device_status(self):
+        """Return the status of the device as string."""
+        try:
+            return self.device_status_simple(self.data.get('status').get(
+                'status1'))
+        except (KeyError, AttributeError):
+            return self.device_status_simple('')
+
+    def capability(self):
+        """Return the capabilities of the printer."""
         try:
             return self.data.get('capability', {})
-        except Exception:
+        except (KeyError, AttributeError):
             return {}
 
-    def tonerStatus(self, filter_supported=True):
-        '''
-        Return status of all toners
-        filter_supported    Only return supported toners
-        Example:
-        'toner_black': {'opt': 1, 'remaining': 81, 'cnt': 98, 'newError': ''}
-        '''
-
+    def toner_status(self, filter_supported=True):
+        """Return the state of all toners cartridges."""
         toner_status = {}
         for color in self.COLOR_NAMES:
             try:
-                tonerStat = self.data.get(SyncThru.TONER + '_' + color, {})
-                if filter_supported and tonerStat.get('opt', 0) == 0:
+                toner_stat = self.data.get(
+                    '{}_{}'.format(SyncThru.TONER, color), {})
+                if filter_supported and toner_stat.get('opt', 0) == 0:
                     continue
                 else:
-                    toner_status[color] = tonerStat
-
-            except Exception:
+                    toner_status[color] = toner_stat
+            except (KeyError, AttributeError):
                 toner_status[color] = {}
         return toner_status
 
-    def inputTrayStatus(self, filter_supported=True):
-        '''
-        Return the status of all input trays
-        filter_supported    Only return supported trays
-        '''
+    def input_tray_status(self, filter_supported=True):
+        """Return the state of all input trays."""
         tray_status = {}
         for i in range(1, 5):
             try:
-                trayStat = self.data.get("{}{}".format(SyncThru.TRAY, i), {})
-                if filter_supported and trayStat.get('opt', 0) == 0:
+                tray_stat = self.data.get('{}{}'.format(SyncThru.TRAY, i), {})
+                if filter_supported and tray_stat.get('opt', 0) == 0:
                     continue
                 else:
-                    tray_status[i] = trayStat
-
-            except Exception:
+                    tray_status[i] = tray_stat
+            except (KeyError, AttributeError):
                 tray_status[i] = {}
         return tray_status
 
-    def outputTrayStatus(self):
-        '''
-        Return the status of all output trays
-        '''
+    def output_tray_status(self):
+        """Return the state of all output trays."""
         tray_status = {}
         try:
-            trayStat = self.data.get("outputTray", [])
-            # Meaning extracted from /sws/app/information/home/home.js
-            # { fields: [ {name: 'name'},
-            #  {name: 'capacity'}, {name: 'status'} ] })
-            for i in range(0, len(trayStat)):
+            tray_stat = self.data.get('outputTray', [])
+            for i in range(0, len(tray_stat)):
                 tray_status[i] = {}
-                tray_status[i]['name'] = trayStat[i][0]
-                tray_status[i]['capacity'] = trayStat[i][1]
-                tray_status[i]['status'] = trayStat[i][2]
-
-        except Exception:
+                tray_status[i]['name'] = tray_stat[i][0]
+                tray_status[i]['capacity'] = tray_stat[i][1]
+                tray_status[i]['status'] = tray_stat[i][2]
+        except (KeyError, AttributeError):
             tray_status = {}
         return tray_status
 
-    def drumStatus(self, filter_supported=True):
-        '''
-        Return the status of all drums
-        filter_supported    Only return supported drums
-        '''
+    def drum_status(self, filter_supported=True):
+        """Return the state of all drums."""
         drum_status = {}
         for color in self.COLOR_NAMES:
             try:
-                drumStat = self.data.get(SyncThru.DRUM + '_' + color, {})
-                if filter_supported and drumStat.get('opt', 0) == 0:
+                drum_stat = self.data.get(
+                    '{}_{}'.format(SyncThru.DRUM, color), {})
+                if filter_supported and drum_stat.get('opt', 0) == 0:
                     continue
                 else:
-                    drum_status[color] = drumStat
-
-            except Exception:
+                    drum_status[color] = drum_stat
+            except (KeyError, AttributeError):
                 drum_status[color] = {}
         return drum_status

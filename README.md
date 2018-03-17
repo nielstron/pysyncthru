@@ -8,10 +8,10 @@ wrappers to access them.
 
 The package supports the following data provided by the printers:
 
-Device / System status
-Drum / Toner status
-Model name
-Tray status
+- Device / System status
+- Drum / Toner status
+- Model name
+- Tray status
 
 Sadly it seems like there is no official API, so fixes are welcome and likely 
 needed!

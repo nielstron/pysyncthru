@@ -1,26 +1,12 @@
 """Connect to a Samsung printer with SyncThru service."""
-import requests
+import asyncio
+
 import demjson
 
+import aiohttp
+import async_timeout
+
 ENDPOINT = "/sws/app/information/home/home.json"
-
-
-def test_syncthru(ip):
-    """Test whether an Samsung printer with Synthru answers under given IP."""
-    url = construct_url(ip)
-
-    # If the below works we can be pretty sure there is a fronius answering
-    try:
-        r = requests.get('{}{}'.format(url, ENDPOINT), timeout=5)
-        json_dict = demjson.decode(r.text)
-        status = json_dict['status']['hrDeviceStatus']
-        if status is not None:
-            return True
-        return False
-    except requests.exceptions.RequestException:
-        return False
-    except KeyError:
-        return False
 
 
 def construct_url(ip):
@@ -40,19 +26,22 @@ class SyncThru(object):
     TRAY = 'tray'
     OFFLINE = 'Offline'
 
-    def __init__(self, ip):
+    def __init__(self, ip, loop, session):
         """Initialize the connection to the printer."""
         self.url = construct_url(ip)
+        self._loop = loop
+        self._session = session
         self.data = None
-        self.update()
 
-    def update(self):
+    async def update(self):
         """Retrieve the data from the printer."""
+        url = '{}{}'.format(self.url, ENDPOINT)
+
         try:
-            r = requests.get('{}{}'.format(self.url, ENDPOINT), timeout=5)
-            # This data sadly is no valid json => use demjson for parsing
-            json_dict = demjson.decode(r.text)
-        except requests.exceptions.RequestException:
+            async with async_timeout.timeout(5, loop=self._loop):
+                response = await self._session.get(url)
+            json_dict = demjson.decode(await response.text())
+        except (asyncio.TimeoutError, aiohttp.ClientError):
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except (KeyError, ValueError):
             json_dict = {}
@@ -112,6 +101,13 @@ class SyncThru(object):
         """Return the capabilities of the printer."""
         try:
             return self.data.get('capability', {})
+        except (KeyError, AttributeError):
+            return {}
+
+    def raw(self):
+        """Return all details of the printer."""
+        try:
+            return self.data
         except (KeyError, AttributeError):
             return {}
 

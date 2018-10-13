@@ -28,7 +28,7 @@ def construct_url(ip_address):
     if 'http://' not in ip_address and 'https://' not in ip_address:
         ip_address = '{}{}'.format('http://', ip_address)
     if ip_address[-1] == '/':
-        del ip_address[-1]
+        ip_address = ip_address[:-1]
     return ip_address
 
 

@@ -23,8 +23,9 @@ setup(name='PySyncThru',
       packages=find_packages(),
       install_requires=[
           'demjson',
-          'requests',
-      ],
+          'aiohttp',
+          'async_timeout',
+        ],
       long_description=long_description,
       license='MIT',
       classifiers=[

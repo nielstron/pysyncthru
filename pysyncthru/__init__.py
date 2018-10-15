@@ -5,14 +5,14 @@ import demjson
 ENDPOINT = "/sws/app/information/home/home.json"
 
 
-def test_syncthru(ip):
+def test_syncthru(ip_address):
     """Test whether an Samsung printer with Synthru answers under given IP."""
-    url = construct_url(ip)
+    url = construct_url(ip_address)
 
     # If the below works we can be pretty sure there is a fronius answering
     try:
-        r = requests.get('{}{}'.format(url, ENDPOINT), timeout=5)
-        json_dict = demjson.decode(r.text)
+        req = requests.get('{}{}'.format(url, ENDPOINT), timeout=5)
+        json_dict = demjson.decode(req.text)
         status = json_dict['status']['hrDeviceStatus']
         if status is not None:
             return True
@@ -23,16 +23,16 @@ def test_syncthru(ip):
         return False
 
 
-def construct_url(ip):
+def construct_url(ip_address):
     """Construct the URL with a given IP address."""
-    if 'http://' not in ip and 'https://' not in ip:
-        ip = '{}{}'.format('http://', ip)
-    if ip[-1] == '/':
-        del ip[-1]
-    return ip
+    if 'http://' not in ip_address and 'https://' not in ip_address:
+        ip_address = '{}{}'.format('http://', ip_address)
+    if ip_address[-1] == '/':
+        del ip_address[-1]
+    return ip_address
 
 
-class SyncThru(object):
+class SyncThru:
     """Interface to communicate with the Samsung Printer with SyncThru."""
     COLOR_NAMES = ['black', 'cyan', 'magenta', 'yellow']
     TONER = 'toner'
@@ -49,9 +49,9 @@ class SyncThru(object):
     def update(self):
         """Retrieve the data from the printer."""
         try:
-            r = requests.get('{}{}'.format(self.url, ENDPOINT), timeout=5)
+            req = requests.get('{}{}'.format(self.url, ENDPOINT), timeout=5)
             # This data sadly is no valid json => use demjson for parsing
-            json_dict = demjson.decode(r.text)
+            json_dict = demjson.decode(req.text)
         except requests.exceptions.RequestException:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except (KeyError, ValueError):
@@ -149,11 +149,12 @@ class SyncThru(object):
         tray_status = {}
         try:
             tray_stat = self.data.get('outputTray', [])
-            for i in range(0, len(tray_stat)):
-                tray_status[i] = {}
-                tray_status[i]['name'] = tray_stat[i][0]
-                tray_status[i]['capacity'] = tray_stat[i][1]
-                tray_status[i]['status'] = tray_stat[i][2]
+            for i, stat in enumerate(tray_stat):
+                tray_status[i] = {
+                    'name': stat[0],
+                    'capacity': stat[1],
+                    'status': stat[2],
+                }
         except (KeyError, AttributeError):
             tray_status = {}
         return tray_status

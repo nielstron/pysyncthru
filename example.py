@@ -31,6 +31,5 @@ async def main():
         # Print all available details from the printer
         print("All data:\n", printer.raw())
 
-
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())

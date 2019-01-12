@@ -15,13 +15,14 @@ short_description = '{}'.format(
 
 setup(
     name='PySyncThru',
-    version='0.3.1',
+    version='0.4',
     description=short_description,
     author='Niels Mündler',
     author_email='n.muendler@web.de',
     url='https://github.com/nielstron/pysyncthru/',
     py_modules=['pysyncthru'],
     packages=find_packages(),
+    package_data={'pysyncthru.tests.test_structure': ['sws/app/information/home/home.json', '*.html']},
     install_requires=[
         'demjson',
         'aiohttp',

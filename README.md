@@ -1,5 +1,6 @@
 # PySyncThru - a very basic python SyncThru bridge
 [![Build Status](https://travis-ci.com/nielstron/pysyncthru.svg?branch=master)](https://travis-ci.com/nielstron/pysyncthru)
+[![Coverage Status](https://coveralls.io/repos/github/nielstron/pysyncthru/badge.svg?branch=master)](https://coveralls.io/github/nielstron/pysyncthru?branch=master)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pysyncthru.svg)](https://pypi.org/project/PySyncThru/)
 
 A package that connects to a Samsung printer in the local network that

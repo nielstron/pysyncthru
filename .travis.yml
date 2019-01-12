@@ -10,6 +10,15 @@ matrix:
 dist: xenial
 sudo: true
 
-install: pip install -U tox
+install:
+- pip install coverage
+- pip install coveralls
+- pip install -e .
 
-script: tox
+script:
+- coverage run --source=pysyncthru setup.py test
+
+after_success:
+- coverage report
+- coveralls
+

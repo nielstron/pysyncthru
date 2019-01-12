@@ -41,4 +41,5 @@ setup(
     ],
     keywords='python syncthru json api samsung printer',
     python_requires='>=3',
+    test_suite='pysyncthru.tests',
 )

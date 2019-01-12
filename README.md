@@ -21,10 +21,29 @@ needed!
 ## Usage
 
 ```python
+import aiohttp
+import asyncio
 from pysyncthru import SyncThru
-syncthru = SyncThru('192.168.1.14')
-# Get the devices status
-syncthru.device_status()
-# Update the data
-syncthru.update()
+
+async def main():
+    async with aiohttp.ClientSession() as session:
+        printer = SyncThru(IP_PRINTER, loop, session)
+        await printer.update()
+
+        # Is printer online?
+        print("Printer online?:", printer.is_online())
+        # Show the printer status
+        print("Printer status:", printer.device_status())
+        if printer.is_online():
+            # Show details about the printer
+            print("Printer model:", printer.model())
+            # Get the details of a cartridge
+            print("Toner Cyan details:", printer.toner_status()['cyan'])
+            # Get the details about a tray
+            print("Tray 1 Capacity:", printer.input_tray_status()[1]['capa'])
+        # Print all available details from the printer
+        print("All data:\n", printer.raw())
+        
+loop = asyncio.get_event_loop()
+loop.run_until_complete(method())
 ```

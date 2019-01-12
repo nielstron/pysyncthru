@@ -42,7 +42,7 @@ class SyncThru:
         try:
             async with async_timeout.timeout(5, loop=self._loop):
                 response = await self._session.get(url)
-            json_dict = demjson.decode(await response.text())
+            json_dict = demjson.decode(await response.text(), strict=False)
         except (asyncio.TimeoutError, aiohttp.ClientError):
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except (KeyError, ValueError):

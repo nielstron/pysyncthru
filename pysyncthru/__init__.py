@@ -1,20 +1,22 @@
 """Connect to a Samsung printer with SyncThru service."""
-import asyncio
 
 import demjson
 
+import asyncio
 import aiohttp
 import async_timeout
+
+from typing import Any, Dict
 
 ENDPOINT = "/sws/app/information/home/home.json"
 
 
-def construct_url(ip_address):
+def construct_url(ip_address: str) -> str:
     """Construct the URL with a given IP address."""
     if 'http://' not in ip_address and 'https://' not in ip_address:
         ip_address = '{}{}'.format('http://', ip_address)
     if ip_address[-1] == '/':
-        del ip_address[-1]
+        ip_address = ip_address[:-1]
     return ip_address
 
 
@@ -26,14 +28,14 @@ class SyncThru:
     TRAY = 'tray'
     OFFLINE = 'Offline'
 
-    def __init__(self, ip, loop, session):
+    def __init__(self, ip, loop, session) -> None:
         """Initialize the connection to the printer."""
         self.url = construct_url(ip)
         self._loop = loop
         self._session = session
-        self.data = None
+        self.data = {}  # type: Dict[str, Any]
 
-    async def update(self):
+    async def update(self) -> None:
         """Retrieve the data from the printer."""
         url = '{}{}'.format(self.url, ENDPOINT)
 
@@ -48,7 +50,7 @@ class SyncThru:
         self.data = json_dict
 
     @staticmethod
-    def device_status_simple(status):
+    def device_status_simple(status: str) -> str:
         """Convert the status1 field of the device status to a string."""
         return {
             '  Sleeping...   ': 'Sleeping',
@@ -57,7 +59,7 @@ class SyncThru:
             SyncThru.OFFLINE: 'Offline',
         }.get(status, 'Unknown')
 
-    def is_online(self):
+    def is_online(self) -> bool:
         """Return true if printer is online."""
         return (self.device_status() != SyncThru.OFFLINE
                 and self.device_status() != 'Unknown')
@@ -98,7 +100,7 @@ class SyncThru:
         except (KeyError, AttributeError):
             return self.device_status_simple('')
 
-    def capability(self):
+    def capability(self) -> Dict[str, Any]:
         """Return the capabilities of the printer."""
         try:
             return self.data.get('capability', {})
@@ -112,7 +114,7 @@ class SyncThru:
         except (KeyError, AttributeError):
             return {}
 
-    def toner_status(self, filter_supported=True):
+    def toner_status(self, filter_supported: bool = True) -> Dict[str, Any]:
         """Return the state of all toners cartridges."""
         toner_status = {}
         for color in self.COLOR_NAMES:
@@ -127,7 +129,8 @@ class SyncThru:
                 toner_status[color] = {}
         return toner_status
 
-    def input_tray_status(self, filter_supported=True):
+    def input_tray_status(self,
+                          filter_supported: bool = True) -> Dict[int, Any]:
         """Return the state of all input trays."""
         tray_status = {}
         for i in range(1, 5):
@@ -141,7 +144,7 @@ class SyncThru:
                 tray_status[i] = {}
         return tray_status
 
-    def output_tray_status(self):
+    def output_tray_status(self) -> Dict[int, Dict[str, str]]:
         """Return the state of all output trays."""
         tray_status = {}
         try:
@@ -156,7 +159,7 @@ class SyncThru:
             tray_status = {}
         return tray_status
 
-    def drum_status(self, filter_supported=True):
+    def drum_status(self, filter_supported: bool = True) -> Dict[str, Any]:
         """Return the state of all drums."""
         drum_status = {}
         for color in self.COLOR_NAMES:

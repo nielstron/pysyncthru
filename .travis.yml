@@ -2,15 +2,23 @@ language: python
 
 matrix:
   include:
-  - python: "3.4"
   - python: "3.5"
   - python: "3.6"
-  - python: "3.7-dev"
+  - python: "3.7"
 
   fast_finish: true
-  allow_failures:
-    - python: "3.7-dev"
+dist: xenial
+sudo: true
 
-install: pip install -U tox
+install:
+- pip install coverage
+- pip install coveralls
+- pip install -e .
 
-script: tox
+script:
+- coverage run --source=pysyncthru setup.py test
+
+after_success:
+- coverage report
+- coveralls
+

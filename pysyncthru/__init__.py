@@ -1,28 +1,14 @@
 """Connect to a Samsung printer with SyncThru service."""
-from typing import Any, Dict
 
-import requests
 import demjson
 
+import asyncio
+import aiohttp
+import async_timeout
+
+from typing import Any, Dict
+
 ENDPOINT = "/sws/app/information/home/home.json"
-
-
-def test_syncthru(ip_address: str) -> bool:
-    """Test whether an Samsung printer with Synthru answers under given IP."""
-    url = construct_url(ip_address)
-
-    # If the below works we can be pretty sure there is a fronius answering
-    try:
-        req = requests.get('{}{}'.format(url, ENDPOINT), timeout=5)
-        json_dict = demjson.decode(req.text)
-        status = json_dict['status']['hrDeviceStatus']
-        if status is not None:
-            return True
-        return False
-    except requests.exceptions.RequestException:
-        return False
-    except KeyError:
-        return False
 
 
 def construct_url(ip_address: str) -> str:
@@ -42,19 +28,22 @@ class SyncThru:
     TRAY = 'tray'
     OFFLINE = 'Offline'
 
-    def __init__(self, ip: str) -> None:
+    def __init__(self, ip, loop, session) -> None:
         """Initialize the connection to the printer."""
         self.url = construct_url(ip)
+        self._loop = loop
+        self._session = session
         self.data = {}  # type: Dict[str, Any]
-        self.update()
 
-    def update(self) -> None:
+    async def update(self) -> None:
         """Retrieve the data from the printer."""
+        url = '{}{}'.format(self.url, ENDPOINT)
+
         try:
-            req = requests.get('{}{}'.format(self.url, ENDPOINT), timeout=5)
-            # This data sadly is no valid json => use demjson for parsing
-            json_dict = demjson.decode(req.text)
-        except requests.exceptions.RequestException:
+            async with async_timeout.timeout(5, loop=self._loop):
+                response = await self._session.get(url)
+            json_dict = demjson.decode(await response.text())
+        except (asyncio.TimeoutError, aiohttp.ClientError):
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except (KeyError, ValueError):
             json_dict = {}
@@ -72,7 +61,8 @@ class SyncThru:
 
     def is_online(self) -> bool:
         """Return true if printer is online."""
-        return self.device_status() != SyncThru.OFFLINE
+        return (self.device_status() != SyncThru.OFFLINE
+                and self.device_status() != 'Unknown')
 
     def model(self):
         """Return the model name of the printer."""
@@ -105,8 +95,8 @@ class SyncThru:
     def device_status(self):
         """Return the status of the device as string."""
         try:
-            return self.device_status_simple(self.data.get('status').get(
-                'status1'))
+            return self.device_status_simple(
+                self.data.get('status').get('status1'))
         except (KeyError, AttributeError):
             return self.device_status_simple('')
 
@@ -114,6 +104,13 @@ class SyncThru:
         """Return the capabilities of the printer."""
         try:
             return self.data.get('capability', {})
+        except (KeyError, AttributeError):
+            return {}
+
+    def raw(self):
+        """Return all details of the printer."""
+        try:
+            return self.data
         except (KeyError, AttributeError):
             return {}
 
@@ -167,8 +164,8 @@ class SyncThru:
         drum_status = {}
         for color in self.COLOR_NAMES:
             try:
-                drum_stat = self.data.get(
-                    '{}_{}'.format(SyncThru.DRUM, color), {})
+                drum_stat = self.data.get('{}_{}'.format(SyncThru.DRUM, color),
+                                          {})
                 if filter_supported and drum_stat.get('opt', 0) == 0:
                     continue
                 else:

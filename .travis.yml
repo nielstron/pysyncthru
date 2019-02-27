@@ -19,14 +19,3 @@ script:
 after_success:
 - coverage report
 - coveralls
-
-deploy:
-  provider: pypi
-  on:
-    branch: master
-    python: '3.7'
-  distributions: sdist bdist_wheel
-  skip_existing: true
-  username: nielstron
-  password:
-    secure: "bNhoHkuKhLg37bHPYZJqo9eGOCYxgX4S1bXdHh/iBWlzE5HCF1xg0Qnojx4NyL7iXv1H36by307tXztpTCRY9YWeN1yK2eGpl1+X0Rn0UvmbgddLtqUwV+CKuPOm66sfYSy6dVLlnPbMqG/aMSLfxx+K6/NA1nFUDSEAUA1X2zBesVp6QhkZmVNUrOmOL06e8EPKHmKtJgyRTF4jwat8G3flquSh+QDM+HKb1BkUcFSDcy6mGkzV7b0styq3T6w+nxSRJfY8SVMt7XRhzqk7+zv9qu6uWQ3pBB1+axqBywhQyxgRq4xSjZ5cj9JXNRCnvrP8GTZztyvEr6FZE2+zug9kGUN49DR23f9CocFkMdMt8daV7TTcPSVI6HvnrFpzJtNawHY2elF+fmsT59D8nFgMql2j44ZMQSScGdmLKvkE3wIPNQArZVq0b0YUk7K7ryLJBHtUt6PMOqJ8qD5iR+4bDY2nYh8VIkKEz7tglf7ViVB/KpW1Opzyix3q00OA9zfweI9IF3P4CeJuAf1U9kntyV5oWRJsSuw3r7qRiCkfOSBXuscYyFFZ3p3Wvi2RwbYz1mU0sJz4wxgvvdYpg2U7gsxOEsbCOKVfRzvftcRBijyYZIoqD6Wr7PFeup6BklondHj+vUpaezyOpEhVb9IAgqg4FzTmtvjWkBL4ntQ="

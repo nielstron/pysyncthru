@@ -1,11 +1,9 @@
 language: python
-
 matrix:
   include:
-  - python: "3.5"
-  - python: "3.6"
-  - python: "3.7"
-
+  - python: '3.5'
+  - python: '3.6'
+  - python: '3.7'
   fast_finish: true
 dist: xenial
 sudo: true
@@ -22,3 +20,14 @@ after_success:
 - coverage report
 - coveralls
 
+deploy:
+  provider: pypi
+  on:
+    branch: master
+    python: '3.7'
+  distributions: sdist bdist_wheel
+  skip_existing: true
+  skip_cleanup: true
+  username: nielstron
+  password:
+    secure: uO6pYHJeCvA5oDEeIvF0Gf50LUZggKIwJhXbAzsBPpelM19kk3gZikVxE0dh9x5l0cZ+iXouiCKkwWo62M7csEqGzm1v0+BbvzSfudTMZRgxOrsdVuaLBzBZ1VUcXk4InnkhPZ9XHRx1pKIehbcohu1kE6bsYusLgA2CaRjNn4gnnIA+Ax+j6QTX+fNs4VdEu6Rp8mX6DSkz7pxtAwCqZetVfYDDVkIrYw1HjJ8QW4sHtiuU6yuyKLd84T3AQ9klcSMLD8R5adIBShtmPQ0O2VRm6rzB8IFhLfYKXSI1uHoj9VbFgwJ7OobVBtzMMJ6zkJ0RdSvBoSaI10RdpULgAP1PYZX10tipByZGKepSYTc5ZbmKu6Eh2T4vRGhePaQ3P0EQW7TJy8zkQquohOdNuSZ3dYU6TNpwi1eIT85PbYjInWyueHqbVAov6gqC6tNcKbqwRp5C360sF/vTFPfk1FnYSTdTWcS0dKFNVjnKyfFCZN3nFT03A/TcFe5RgNvuSTWf3MyyYPQOOJjJAKdfbJ2OKXedbTLV+BY2HwV4nTMTxqicD0Xa4rYen/71fPQWzgcsi4/sojuYK7yTaZUkZPBCFweL9gAMoouVmhaFGixl7sYZ3BvT1mjFKf4Xy5yubckIIesKVV12WDgqhaJJhDfpY4W+3tEHiFLTwds1wns=

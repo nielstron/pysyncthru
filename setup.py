@@ -15,9 +15,9 @@ short_description = '{}'.format(
 
 setup(
     name='PySyncThru',
-    version='0.4',
+    version='0.4.1',
     description=short_description,
-    author='Niels Mündler',
+    author='nielstron',
     author_email='n.muendler@web.de',
     url='https://github.com/nielstron/pysyncthru/',
     py_modules=['pysyncthru'],

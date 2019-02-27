@@ -50,8 +50,6 @@ class SyncThru:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except demjson.JSONDecodeError:
             raise ValueError("Invalid host, does not support SyncThru.")
-        except (KeyError, ValueError):
-            json_dict = {}
         self.data = json_dict
 
     @staticmethod

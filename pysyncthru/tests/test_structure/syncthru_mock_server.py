@@ -11,10 +11,26 @@ from pathlib import Path
 
 SERVER_DIR = Path(__file__).parent or Path('.')
 
-SyncThruServer = HTTPServer
+
+class SyncThruServer(HTTPServer):
+
+    blocked = False
+
+    def set_blocked(self):
+        self.blocked = True
+
+    def unset_blocked(self):
+        self.blocked = False
 
 
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
+    
+    def do_GET(self):
+        if self.server.blocked:
+            self.send_error(403, "Access denied because server blocked")
+        else:
+            super(SyncThruRequestHandler, self).do_GET()
+    
     def translate_path(self, path):
         """Translate a /-separated PATH to the local filename syntax.
 

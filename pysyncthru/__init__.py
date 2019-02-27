@@ -29,14 +29,17 @@ class SyncThru:
     OFFLINE = 'Offline'
 
     def __init__(self, ip, loop, session) -> None:
-        """Initialize the connection to the printer."""
+        """Initialize the the printer."""
         self.url = construct_url(ip)
         self._loop = loop
         self._session = session
         self.data = {}  # type: Dict[str, Any]
 
     async def update(self) -> None:
-        """Retrieve the data from the printer."""
+        """
+        Retrieve the data from the printer.
+        Throws ValueError if host does not support SyncThru
+        """
         url = '{}{}'.format(self.url, ENDPOINT)
 
         try:
@@ -45,6 +48,8 @@ class SyncThru:
             json_dict = demjson.decode(await response.text(), strict=False)
         except (asyncio.TimeoutError, aiohttp.ClientError):
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
+        except demjson.JSONDecodeError:
+            raise ValueError("Invalid host, does not support SyncThru.")
         except (KeyError, ValueError):
             json_dict = {}
         self.data = json_dict

@@ -42,7 +42,7 @@ class SyncThru:
         try:
             async with self._session.get(url) as response:
                 json_dict = demjson.decode(await response.text(), strict=False)
-        except aiohttp.ServerTimeoutError:
+        except aiohttp.ClientError:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except demjson.JSONDecodeError:
             raise ValueError("Invalid host, does not support SyncThru.")

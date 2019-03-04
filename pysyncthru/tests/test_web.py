@@ -52,7 +52,7 @@ class SyncthruWebTest(unittest.TestCase):
 
         async def fetch():
             async with aiohttp.ClientSession() as session:
-                self.syncthru = SyncThru(self.url, loop, session)
+                self.syncthru = SyncThru(self.url, session)
                 await self.syncthru.update()
 
         loop = asyncio.get_event_loop()
@@ -241,7 +241,7 @@ class NonSyncthruWebTest(unittest.TestCase):
         try:
             async def fetch():
                 async with aiohttp.ClientSession() as session:
-                    self.syncthru = SyncThru(self.url, loop, session)
+                    self.syncthru = SyncThru(self.url, session)
                     await self.syncthru.update()
 
             loop = asyncio.get_event_loop()
@@ -255,7 +255,7 @@ class NonSyncthruWebTest(unittest.TestCase):
 
         async def fetch():
             async with aiohttp.ClientSession() as session:
-                self.syncthru = SyncThru(self.url, loop, session)
+                self.syncthru = SyncThru(self.url, session)
                 await self.syncthru.update()
 
         loop = asyncio.get_event_loop()

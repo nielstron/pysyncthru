@@ -26,7 +26,6 @@ setup(
     install_requires=[
         'demjson',
         'aiohttp',
-        'async_timeout',
     ],
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -2,9 +2,7 @@
 
 import demjson
 
-import asyncio
 import aiohttp
-import async_timeout
 
 from typing import Any, Dict
 
@@ -28,10 +26,9 @@ class SyncThru:
     TRAY = 'tray'
     OFFLINE = 'Offline'
 
-    def __init__(self, ip, loop, session) -> None:
+    def __init__(self, ip, session) -> None:
         """Initialize the the printer."""
         self.url = construct_url(ip)
-        self._loop = loop
         self._session = session
         self.data = {}  # type: Dict[str, Any]
 
@@ -43,10 +40,9 @@ class SyncThru:
         url = '{}{}'.format(self.url, ENDPOINT)
 
         try:
-            async with async_timeout.timeout(5, loop=self._loop):
-                response = await self._session.get(url)
-            json_dict = demjson.decode(await response.text(), strict=False)
-        except (asyncio.TimeoutError, aiohttp.ClientError):
+            async with self._session.get(url) as response:
+                json_dict = demjson.decode(await response.text(), strict=False)
+        except aiohttp.ServerTimeoutError:
             json_dict = {'status': {'status1': SyncThru.OFFLINE}}
         except demjson.JSONDecodeError:
             raise ValueError("Invalid host, does not support SyncThru.")

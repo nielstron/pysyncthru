@@ -4,7 +4,9 @@ import demjson
 
 import aiohttp
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+
+from . import language as lng
 
 ENDPOINT = "/sws/app/information/home/home.json"
 
@@ -49,59 +51,77 @@ class SyncThru:
         self.data = json_dict
 
     @staticmethod
-    def device_status_simple(status: str) -> str:
+    def _device_status_internal(status: str, lang="EN") -> lng.State:
         """Convert the status1 field of the device status to a string."""
-        return {
-            '  Sleeping...   ': 'Sleeping',
-            ' Ready to Copy  ': 'Ready',
-            '   Warming Up   ': 'Warming up',
-            SyncThru.OFFLINE: 'Offline',
-        }.get(status, 'Unknown')
+        try:
+            raw_to_internal_dict = lng.RAW_TO_INTERNAL[lang]
+        except KeyError:
+            raise ValueError("Language code {} not supported.".format(lang))
+        raw_to_internal_dict[SyncThru.OFFLINE] = lng.State.OFFLINE
+        return raw_to_internal_dict.get(status, lng.State.UNKNOWN)
+
+    @staticmethod
+    def _device_status_external(status: lng.State, lang="EN") -> str:
+        """Convert the status1 field of the device status to a string."""
+        try:
+            internal_to_simple_dict = lng.INTERNAL_TO_SIMPLE[lang]
+        except KeyError:
+            raise ValueError("Language code {} not supported.".format(lang))
+        return internal_to_simple_dict[status]
 
     def is_online(self) -> bool:
         """Return true if printer is not offline."""
-        return self.device_status() != SyncThru.OFFLINE
+        return self._device_status() != lng.State.OFFLINE
 
-    def is_unkown_state(self) -> bool:
+    def is_unknown_state(self) -> bool:
         """Return true if printers exact state is unknow."""
-        return (self.device_status() == SyncThru.OFFLINE
-                or self.device_status() == 'Unknown')
+        return (self._device_status() == lng.State.OFFLINE
+                or self._device_status() == lng.State.UNKNOWN)
 
-    def model(self):
+    def model(self) -> Optional[str]:
         """Return the model name of the printer."""
         try:
             return self.data.get('identity').get('model_name')
         except (KeyError, AttributeError):
-            return self.device_status_simple('')
+            return None
 
-    def location(self):
+    def location(self) -> Optional[str]:
         """Return the location of the printer."""
         try:
             return self.data.get('identity').get('location')
         except (KeyError, AttributeError):
-            return self.device_status_simple('')
+            return None
 
-    def serial_number(self):
+    def serial_number(self) -> Optional[str]:
         """Return the serial number of the printer."""
         try:
             return self.data.get('identity').get('serial_num')
         except (KeyError, AttributeError):
-            return self.device_status_simple('')
+            return None
 
-    def hostname(self):
+    def hostname(self) -> Optional[str]:
         """Return the hostname of the printer."""
         try:
             return self.data.get('identity').get('host_name')
         except (KeyError, AttributeError):
-            return self.device_status_simple('')
+            return None
 
-    def device_status(self):
+    def _device_status(self, lang="EN") -> lng.State:
+        """Fetch the raw device status converted to internal enum"""
+        try:
+
+            return self._device_status_internal(
+                self.data.get('status').get('status1'), lang)
+        except (KeyError, AttributeError):
+            return lng.State.UNKNOWN
+
+    def device_status(self, lang="EN") -> str:
         """Return the status of the device as string."""
         try:
-            return self.device_status_simple(
-                self.data.get('status').get('status1'))
+            return self._device_status_external(
+                self._device_status(lang), lang)
         except (KeyError, AttributeError):
-            return self.device_status_simple('')
+            return self._device_status_external(lng.State.UNKNOWN, lang)
 
     def capability(self) -> Dict[str, Any]:
         """Return the capabilities of the printer."""
@@ -110,7 +130,7 @@ class SyncThru:
         except (KeyError, AttributeError):
             return {}
 
-    def raw(self):
+    def raw(self) -> Dict:
         """Return all details of the printer."""
         try:
             return self.data

@@ -59,9 +59,13 @@ class SyncThru:
         }.get(status, 'Unknown')
 
     def is_online(self) -> bool:
-        """Return true if printer is online."""
-        return (self.device_status() != SyncThru.OFFLINE
-                and self.device_status() != 'Unknown')
+        """Return true if printer is not offline."""
+        return self.device_status() != SyncThru.OFFLINE
+
+    def is_unkown_state(self) -> bool:
+        """Return true if printers exact state is unknow."""
+        return (self.device_status() == SyncThru.OFFLINE
+                or self.device_status() == 'Unknown')
 
     def model(self):
         """Return the model name of the printer."""

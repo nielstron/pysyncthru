@@ -14,7 +14,7 @@ IP_PRINTER = '192.168.0.25'
 
 async def main():
     async with aiohttp.ClientSession() as session:
-        printer = SyncThru(IP_PRINTER, loop, session)
+        printer = SyncThru(IP_PRINTER, session)
         await printer.update()
 
         # Is printer online?

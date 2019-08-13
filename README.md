@@ -19,6 +19,8 @@ The package supports the following data provided by the printers:
 Sadly it seems like there is no official API, so fixes are welcome and likely 
 needed!
 
+If your printer's language is not English, the functions might not work.
+
 ## Usage
 
 ```python
@@ -26,9 +28,11 @@ import aiohttp
 import asyncio
 from pysyncthru import SyncThru
 
+IP_PRINTER = '192.168.0.25'
+
 async def main():
     async with aiohttp.ClientSession() as session:
-        printer = SyncThru(IP_PRINTER, loop, session)
+        printer = SyncThru(IP_PRINTER, session)
         await printer.update()
 
         # Is printer online?
@@ -46,5 +50,5 @@ async def main():
         print("All data:\n", printer.raw())
         
 loop = asyncio.get_event_loop()
-loop.run_until_complete(method())
+loop.run_until_complete(main())
 ```

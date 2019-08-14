@@ -58,10 +58,10 @@ INTERNAL_TO_HUMAN = {
     },
     "RU": {
         State.SLEEPING: 'Oжидaниe',
-        State.WARMING_UP: 'прогревается',
-        State.OFFLINE: 'отсутствует',
+        State.WARMING_UP: 'Разогрев',
+        State.OFFLINE: 'Не в сети',
         State.READY: 'Гoтoв',
-        State.UNKNOWN: 'неизвестно',
+        State.UNKNOWN: 'Неизвестно',
         State.PRINTING: 'Идeт пeчaть',
     },
 }

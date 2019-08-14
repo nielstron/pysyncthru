@@ -57,7 +57,9 @@ class SyncThru:
             try:
                 raw_to_internal_dict = lng.RAW_TO_INTERNAL[lang]
             except KeyError:
-                raise ValueError("Language code {} not supported.".format(lang))
+                raise ValueError(
+                    "Language code {} not supported.".format(lang)
+                )
         else:
             raw_to_internal_dict = lng.ANY_LANGUAGE
         raw_to_internal_dict[SyncThru.OFFLINE] = lng.State.OFFLINE

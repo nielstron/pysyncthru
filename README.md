@@ -52,3 +52,15 @@ async def main():
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
 ```
+
+## Troubleshooting
+
+If the general state of your printer stays at 'Unknown',
+it might be the case that the language of your printer is not supported.
+
+Even though officially your language is supported it might be that
+some states are not exactly matching the expected states stored in the library.
+For this case, have a look at the language support issue template for a detailed how-to on adding support for your printer
+or open a general issue.
+
+Current supported languages are: English

@@ -15,9 +15,10 @@ assignees: ''
  - **Sleeping**: `{ status: { hrDeviceStatus: 2, status1: " Sleeping... " ...`
  - **Ready**: `{ status: { hrDeviceStatus: 2, status1: " Ready " ...`
  - **Warming up**: `{ status: { hrDeviceStatus: 2, status1: "Warming up" ...`
- - **Additional values and their meaning** (if applicable):
-   - Eco-mode: `{ status: { hrDeviceStatus: 2, status1: " Sparbetrieb... ", ...`
-   .... 
+ - **Printing**: `{ status: { hrDeviceStatus: 2, status1: "Printing..." ...`
+ - ...
+   
+(whichever you have identified with your printer)
 
 ### How-To 
 
@@ -26,7 +27,3 @@ Access `http://your-printer-ip/sws/app/information/home/home.json` via `wget` or
 You can dump the result here, but the important part is `status:status1` like in the below example:
 `{ status: { hrDeviceStatus: 2, status1: " Sparbetrieb... ", ...`
 
-*Important*: Make sure to cover (at least) all of the following states: 
- - Sleeping
- - Ready
- - Warming up

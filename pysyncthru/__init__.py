@@ -51,12 +51,15 @@ class SyncThru:
         self.data = json_dict
 
     @staticmethod
-    def _device_status_internal(status: str, lang="EN") -> lng.State:
+    def _device_status_internal(status: str, lang=None) -> lng.State:
         """Convert the status1 field of the device status to a string."""
-        try:
-            raw_to_internal_dict = lng.RAW_TO_INTERNAL[lang]
-        except KeyError:
-            raise ValueError("Language code {} not supported.".format(lang))
+        if lang:
+            try:
+                raw_to_internal_dict = lng.RAW_TO_INTERNAL[lang]
+            except KeyError:
+                raise ValueError("Language code {} not supported.".format(lang))
+        else:
+            raw_to_internal_dict = lng.ANY_LANGUAGE
         raw_to_internal_dict[SyncThru.OFFLINE] = lng.State.OFFLINE
         return raw_to_internal_dict.get(status, lng.State.UNKNOWN)
 

@@ -67,7 +67,7 @@ class SyncThru:
     def _device_status_external(status: lng.State, lang="EN") -> str:
         """Convert the status1 field of the device status to a string."""
         try:
-            internal_to_simple_dict = lng.INTERNAL_TO_SIMPLE[lang]
+            internal_to_simple_dict = lng.INTERNAL_TO_HUMAN[lang]
         except KeyError:
             raise ValueError("Language code {} not supported.".format(lang))
         return internal_to_simple_dict[status]

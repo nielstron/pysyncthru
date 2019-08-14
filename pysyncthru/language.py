@@ -39,7 +39,7 @@ ANY_LANGUAGE = {}
 for _, mapping in RAW_TO_INTERNAL:
     ANY_LANGUAGE.update(mapping)
 
-INTERNAL_TO_SIMPLE = {
+INTERNAL_TO_HUMAN = {
     "EN": {
         State.SLEEPING: 'Sleeping',
         State.WARMING_UP: 'Warming Up',

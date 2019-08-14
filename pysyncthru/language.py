@@ -36,7 +36,7 @@ RAW_TO_INTERNAL = {
 }
 
 ANY_LANGUAGE = {}
-for _, mapping in RAW_TO_INTERNAL:
+for mapping in RAW_TO_INTERNAL.values():
     ANY_LANGUAGE.update(mapping)
 
 INTERNAL_TO_HUMAN = {

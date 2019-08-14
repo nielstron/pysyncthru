@@ -14,6 +14,7 @@ class State(Enum):
     WARMING_UP = 3
     READY = 4
     UNKNOWN = 5
+    PRINTING = 6
 
 
 RAW_TO_INTERNAL = {
@@ -21,16 +22,46 @@ RAW_TO_INTERNAL = {
         '  Sleeping...   ': State.SLEEPING,
         ' Ready to Copy  ': State.READY,
         '   Warming Up   ': State.WARMING_UP,
+    },
+    "DE": {
+        ' Sparbetrieb... ': State.SLEEPING,
+        ' Bereit: Kopie ': State.READY,
+        'Wird gedruckt...': State.PRINTING,
+    },
+    "RU": {
+        ' Oжидaниe... ': State.SLEEPING,
+        ' Гoтoв к кoпиp. ': State.READY,
+        ' Идeт пeчaть... ': State.PRINTING,
     }
 }
 
-INTERNAL_TO_SIMPLE = {
+ANY_LANGUAGE = {}
+for mapping in RAW_TO_INTERNAL.values():
+    ANY_LANGUAGE.update(mapping)
+
+INTERNAL_TO_HUMAN = {
     "EN": {
         State.SLEEPING: 'Sleeping',
         State.WARMING_UP: 'Warming Up',
         State.OFFLINE: 'Offline',
         State.READY: 'Ready',
         State.UNKNOWN: 'Unknown',
-    }
+        State.PRINTING: 'Printing',
+    },
+    "DE": {
+        State.SLEEPING: 'Sparbetrieb',
+        State.WARMING_UP: 'Aufwärmen',
+        State.OFFLINE: 'Nicht erreichbar',
+        State.READY: 'Bereit',
+        State.UNKNOWN: 'Unbekannt',
+        State.PRINTING: 'Drucken',
+    },
+    "RU": {
+        State.SLEEPING: 'Oжидaниe',
+        State.WARMING_UP: 'Разогрев',
+        State.OFFLINE: 'Не в сети',
+        State.READY: 'Гoтoв',
+        State.UNKNOWN: 'Неизвестно',
+        State.PRINTING: 'Идeт пeчaть',
+    },
 }
-

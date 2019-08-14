@@ -250,7 +250,7 @@ class NonSyncthruWebTest(unittest.TestCase):
         except ValueError:
             pass
 
-    def test_offline(self):
+    def test_offline_unknown(self):
         """Test that nothing is returned when syncthru is offline"""
 
         async def fetch():
@@ -261,6 +261,7 @@ class NonSyncthruWebTest(unittest.TestCase):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(fetch())
         self.assertFalse(self.syncthru.is_online())
+        self.assertTrue(self.syncthru.is_unknown_state())
 
 
 if __name__ == "__main__":

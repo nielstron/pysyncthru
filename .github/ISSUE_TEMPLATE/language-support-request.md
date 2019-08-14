@@ -16,7 +16,7 @@ assignees: ''
  - **Ready**: `{ status: { hrDeviceStatus: 2, status1: " Ready " ...`
  - **Warming up**: `{ status: { hrDeviceStatus: 2, status1: "Warming up" ...`
  - **Printing**: `{ status: { hrDeviceStatus: 2, status1: "Printing..." ...`
-   ...
+ - ...
    
 (whichever you have identified with your printer)
 

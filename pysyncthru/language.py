@@ -41,7 +41,13 @@ RAW_TO_INTERNAL = {
         ' Oжидaниe... ': State.SLEEPING,
         ' Гoтoв к кoпиp. ': State.READY,
         ' Идeт пeчaть... ': State.PRINTING,
-    }
+    },
+    "FR": {
+        ' Veille... ': State.SLEEPING,
+        ' Pret a copier ': State.READY,
+        ' Chauffage ': State.WARMING_UP,
+        ' Impression... ': State.PRINTING,
+    },
 }
 
 # Adds menue items that are mapped to "Ready" state

@@ -64,4 +64,4 @@ some states are not exactly matching the expected states stored in the library.
 For this case, have a look at the language support issue template for a detailed how-to on adding support for your printer
 or open a general issue.
 
-Current supported languages are: English, Russian, German, French
+Current supported languages are: English, Russian, German, French, Italian

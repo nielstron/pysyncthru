@@ -48,6 +48,12 @@ RAW_TO_INTERNAL = {
         ' Chauffage ': State.WARMING_UP,
         ' Impression... ': State.PRINTING,
     },
+    "IT": {
+        ' In attesa... ': State.SLEEPING,
+        'Copia pronta': State.READY,
+        'Riscaldamento': State.WARMING_UP,
+        'Stampa ...': State.PRINTING,
+    },
 }
 
 # Adds menue items that are mapped to "Ready" state

@@ -63,7 +63,7 @@ class SyncThru:
         else:
             raw_to_internal_dict = lng.ANY_LANGUAGE
         raw_to_internal_dict[SyncThru.OFFLINE] = lng.State.OFFLINE
-        return raw_to_internal_dict.get(status, lng.State.UNKNOWN)
+        return raw_to_internal_dict.get(status.strip(), lng.State.UNKNOWN)
 
     @staticmethod
     def _device_status_external(status: lng.State, lang="EN") -> str:

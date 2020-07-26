@@ -9,7 +9,7 @@ import aiohttp
 
 from pysyncthru import SyncThru
 
-IP_PRINTER = '192.168.0.25'
+IP_PRINTER = "192.168.0.25"
 
 
 async def main():
@@ -25,11 +25,12 @@ async def main():
             # Show details about the printer
             print("Printer model:", printer.model())
             # Get the details of a cartridge
-            print("Toner Cyan details:", printer.toner_status()['cyan'])
+            print("Toner Cyan details:", printer.toner_status()["cyan"])
             # Get the details about a tray
-            print("Tray 1 Capacity:", printer.input_tray_status()[1]['capa'])
+            print("Tray 1 Capacity:", printer.input_tray_status()[1]["capa"])
         # Print all available details from the printer
         print("All data:\n", printer.raw())
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())

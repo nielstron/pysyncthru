@@ -10,11 +10,11 @@ dist: xenial
 sudo: true
 
 install:
-- pip install coverage
-- pip install coveralls
+- pip install coverage coveralls black
 - pip install -e .
 
 script:
+- black . --check
 - coverage run --source=pysyncthru setup.py test
 
 after_success:

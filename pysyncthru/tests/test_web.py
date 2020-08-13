@@ -12,7 +12,7 @@ import time
 # For the tests
 import aiohttp
 import asyncio
-from pysyncthru import SyncThru
+from pysyncthru import SyncThru, SyncthruState
 from .web_raw.web_state import RAW
 
 ADDRESS = "localhost"
@@ -61,8 +61,11 @@ class SyncthruWebTest(unittest.TestCase):
     def test_online(self):
         self.assertTrue(self.syncthru.is_online())
 
-    def test_status_sleeping(self):
-        self.assertEqual(self.syncthru.device_status(), "Sleeping")
+    def test_status_normal(self):
+        self.assertEqual(self.syncthru.device_status(), SyncthruState.NORMAL)
+
+    def test_status_details(self):
+        self.assertEqual(self.syncthru.device_status_details(), "Sleeping...")
 
     def test_model(self):
         self.assertEqual(self.syncthru.model(), RAW["identity"]["model_name"])

@@ -2,18 +2,21 @@ language: python
 matrix:
   include:
   - python: '3.5'
+    env: NO_BLACK=1
   - python: '3.6'
   - python: '3.7'
+  - python: '3.8'
   fast_finish: true
 dist: xenial
 sudo: true
 
 install:
-- pip install coverage
-- pip install coveralls
+- pip install coverage coveralls
+- test "$NO_BLACK" || pip install black
 - pip install -e .
 
 script:
+- test "$NO_BLACK" || black . --check
 - coverage run --source=pysyncthru setup.py test
 
 after_success:

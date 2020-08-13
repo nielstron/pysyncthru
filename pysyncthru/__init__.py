@@ -115,7 +115,7 @@ class SyncThru:
         """Fetch the raw device status"""
         try:
             return SyncthruState(int(self.data.get("status").get("hrDeviceStatus")))
-        except ValueError:
+        except (ValueError, TypeError):
             return SyncthruState.INVALID
 
     def device_status_details(self) -> str:

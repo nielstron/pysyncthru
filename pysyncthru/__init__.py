@@ -116,7 +116,7 @@ class SyncThru:
         try:
             return SyncthruState(int(self.data.get("status").get("hrDeviceStatus")))
         except ValueError:
-            return SyncthruState.OFFLINE
+            return SyncthruState.INVALID
 
     def device_status_details(self) -> str:
         """Return the detailed (display) status of the device as string."""

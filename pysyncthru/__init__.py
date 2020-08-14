@@ -20,16 +20,6 @@ class SyncthruState(Enum):
     ERROR = 5
 
 
-SYNCTHRU_STATE_HUMAN = {
-    SyncthruState.INVALID: "invalid",
-    SyncthruState.OFFLINE: "offline",
-    SyncthruState.UNKNOWN: "unknown",
-    SyncthruState.NORMAL: "normal",
-    SyncthruState.WARNING: "warning",
-    SyncthruState.ERROR: "error",
-}
-
-
 def construct_url(ip_address: str) -> str:
     """Construct the URL with a given IP address."""
     if "http://" not in ip_address and "https://" not in ip_address:
@@ -115,7 +105,7 @@ class SyncThru:
         """Fetch the raw device status"""
         try:
             return SyncthruState(int(self.data.get("status").get("hrDeviceStatus")))
-        except ValueError:
+        except (ValueError, TypeError):
             return SyncthruState.INVALID
 
     def device_status_details(self) -> str:

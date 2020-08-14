@@ -16,7 +16,7 @@ short_description = "{}".format(
 
 setup(
     name="PySyncThru",
-    version="0.7.0",
+    version="0.7.1",
     description=short_description,
     author="nielstron",
     author_email="n.muendler@web.de",
@@ -41,6 +41,7 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     keywords="python syncthru json api samsung printer",
     python_requires=">=3",

@@ -29,7 +29,10 @@ setup(
             "*.html",
         ]
     },
-    install_requires=["demjson", "aiohttp",],
+    install_requires=[
+        "demjson",
+        "aiohttp",
+    ],
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",

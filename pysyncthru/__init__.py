@@ -111,7 +111,9 @@ class SyncThru:
     def device_status_details(self) -> str:
         """Return the detailed (display) status of the device as string."""
         head = self.data.get("status")
-        status_display = [head.get("status{}".format(i)).strip() for i in [1, 2, 3, 4]]
+        status_display = [
+            head.get("status{}".format(i), "").strip() for i in [1, 2, 3, 4]
+        ]
         status_display = [x for x in status_display if x]  # filter out empty lines
         return " ".join(status_display).strip()
 

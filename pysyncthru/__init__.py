@@ -148,15 +148,19 @@ class SyncThru:
     def input_tray_status(self, filter_supported: bool = True) -> Dict[int, Any]:
         """Return the state of all input trays."""
         tray_status = {}
-        for i in range(1, 5):
+        for tray in (
+            *("{}{}".format(SyncThru.TRAY, i) for i in range(1, 6)),
+            "mp",
+            "manual",
+        ):
             try:
-                tray_stat = self.data.get("{}{}".format(SyncThru.TRAY, i), {})
-                if filter_supported and tray_stat.get("opt", 0) == 0:
+                tray_stat = self.data.get(tray, {})
+                if filter_supported and tray_stat.get("opt", 0) != 1:
                     continue
                 else:
-                    tray_status[i] = tray_stat
+                    tray_status[tray] = tray_stat
             except (KeyError, AttributeError):
-                tray_status[i] = {}
+                tray_status[tray] = {}
         return tray_status
 
     def output_tray_status(self) -> Dict[int, Dict[str, str]]:

@@ -71,14 +71,14 @@ class SyncthruWebTest(unittest.TestCase):
         self.assertEqual(self.syncthru.model(), RAW["identity"]["model_name"])
 
     def test_toner_filter(self):
-        self.assertEqual(
+        self.assertDictEqual(
             self.syncthru.toner_status(True),
             {"black": {"opt": 1, "remaining": 58, "cnt": 229, "newError": ""}},
         )
 
     def test_toner_no_filter(self):
         empty = {"opt": 0, "remaining": 0, "cnt": 0, "newError": ""}
-        self.assertEqual(
+        self.assertDictEqual(
             self.syncthru.toner_status(False),
             {
                 "yellow": empty,
@@ -89,7 +89,7 @@ class SyncthruWebTest(unittest.TestCase):
         )
 
     def test_input_tray_filter(self):
-        self.assertEqual(
+        self.assertDictEqual(
             self.syncthru.input_tray_status(True),
             {
                 "tray_1": {
@@ -105,7 +105,7 @@ class SyncthruWebTest(unittest.TestCase):
         )
 
     def test_input_tray_no_filter(self):
-        self.assertEqual(
+        self.assertDictEqual(
             self.syncthru.input_tray_status(False),
             {
                 "tray_1": {
@@ -138,7 +138,7 @@ class SyncthruWebTest(unittest.TestCase):
                 "tray_4": {
                     "capa": 0,
                     "newError": "",
-                    "opt": 0,
+                    "opt": 2,
                     "paper_size1": 0,
                     "paper_size2": 0,
                     "paper_type1": 2,

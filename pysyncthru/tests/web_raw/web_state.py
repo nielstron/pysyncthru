@@ -55,7 +55,7 @@ RAW = {
         "newError": "",
     },
     "tray4": {
-        "opt": 0,
+        "opt": 2,
         "paper_size1": 0,
         "paper_size2": 0,
         "paper_type1": 2,

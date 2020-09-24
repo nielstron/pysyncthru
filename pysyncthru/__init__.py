@@ -7,9 +7,7 @@ import aiohttp
 from typing import Any, Dict, Optional
 from enum import Enum
 
-ENDPOINT = "/sws/app/information/home/home.json"
-
-
+ENDPOINT = '/sws/app/information/home/home.json'
 class SyncthruState(Enum):
     INVALID = -1  # invalid state for values returned that are not in [1,5]
     OFFLINE = 0

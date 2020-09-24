@@ -66,7 +66,8 @@ class SyncThru:
     def is_unknown_state(self) -> bool:
         """
         Return true if printers exact state could not be retreived.
-        Note that this is different from the fact that the printer itself might return an "unknown" state
+        Note that this is different from the fact that the printer
+        itself might return an "unknown" state
         """
         return (
             self.device_status() == SyncthruState.OFFLINE

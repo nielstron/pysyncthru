@@ -15,11 +15,11 @@ sudo: true
 
 install:
 - pip install coverage coveralls
-- test "$PRE_COMMIT" || pip install pre-commit
+- test ! "$PRE_COMMIT" || pip install pre-commit
 - pip install -e .
 
 script:
-- test "$PRE_COMMIT" || pre-commit run
+- test ! "$PRE_COMMIT" || pre-commit run --all-files
 - coverage run --source=pysyncthru setup.py test
 
 after_success:

@@ -92,7 +92,7 @@ class SyncthruWebTest(unittest.TestCase):
         self.assertEqual(
             self.syncthru.input_tray_status(True),
             {
-                1: {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -108,7 +108,7 @@ class SyncthruWebTest(unittest.TestCase):
         self.assertEqual(
             self.syncthru.input_tray_status(False),
             {
-                1: {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -117,7 +117,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                2: {
+                "tray_2": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -126,7 +126,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                3: {
+                "tray_3": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -135,7 +135,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                4: {
+                "tray_4": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -143,6 +143,33 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_size2": 0,
                     "paper_type1": 2,
                     "paper_type2": 0,
+                },
+                "tray_5": {
+                    "opt": 0,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 0,
+                    "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "0",
+                },
+                "mp": {
+                    "opt": 0,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 2,
+                    "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "",
+                },
+                "manual": {
+                    "opt": 0,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 2,
+                    "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "",
                 },
             },
         )

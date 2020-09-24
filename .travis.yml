@@ -15,7 +15,7 @@ sudo: true
 
 install:
 - pip install coverage coveralls
-- test "$NO_BLACK" || pip install pre-commit
+- pip install pre-commit
 - pip install -e .
 
 script:

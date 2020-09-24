@@ -12,11 +12,11 @@ sudo: true
 
 install:
 - pip install coverage coveralls
-- test "$NO_BLACK" || pip install black
+- test "$NO_BLACK" || pip install pre-commit
 - pip install -e .
 
 script:
-- test "$NO_BLACK" || black . --check
+- test "$NO_BLACK" || pre-commit run black --all-files
 - coverage run --source=pysyncthru setup.py test
 
 after_success:

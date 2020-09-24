@@ -7,7 +7,7 @@ name = "pypi"
 pysyncthru = {editable = true,path = "."}
 
 [dev-packages]
-black = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"

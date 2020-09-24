@@ -149,12 +149,12 @@ class SyncThru:
         """Return the state of all input trays."""
         tray_status = {}
         for tray in (
-            *("{}{}".format(SyncThru.TRAY, i) for i in range(1, 6)),
-            "mp",
+            *("{}_{}".format(SyncThru.TRAY, i) for i in range(1, 6)),
+            "mp",  # TODO what does mp stand for?
             "manual",
         ):
             try:
-                tray_stat = self.data.get(tray, {})
+                tray_stat = self.data.get(tray.replace("_", ""), {})
                 if filter_supported and tray_stat.get("opt", 0) != 1:
                     continue
                 else:

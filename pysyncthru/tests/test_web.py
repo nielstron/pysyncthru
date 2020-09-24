@@ -92,7 +92,7 @@ class SyncthruWebTest(unittest.TestCase):
         self.assertEqual(
             self.syncthru.input_tray_status(True),
             {
-                "tray1": {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -108,7 +108,7 @@ class SyncthruWebTest(unittest.TestCase):
         self.assertEqual(
             self.syncthru.input_tray_status(False),
             {
-                "tray1": {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -117,7 +117,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                "tray2": {
+                "tray_2": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -126,7 +126,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                "tray3": {
+                "tray_3": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -135,7 +135,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                "tray4": {
+                "tray_4": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -144,7 +144,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                "tray5": {
+                "tray_5": {
                     "opt": 0,
                     "paper_size1": 0,
                     "paper_size2": 0,

@@ -4,7 +4,7 @@ import demjson
 
 import aiohttp
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 from enum import Enum
 
 ENDPOINT = "/sws/app/information/home/home.json"
@@ -77,41 +77,41 @@ class SyncThru:
     def model(self) -> Optional[str]:
         """Return the model name of the printer."""
         try:
-            return self.data.get("identity").get("model_name")
+            return cast(str, self.data.get("identity", {}).get("model_name"))
         except (KeyError, AttributeError):
             return None
 
     def location(self) -> Optional[str]:
         """Return the location of the printer."""
         try:
-            return self.data.get("identity").get("location")
+            return cast(str, self.data.get("identity", {}).get("location"))
         except (KeyError, AttributeError):
             return None
 
     def serial_number(self) -> Optional[str]:
         """Return the serial number of the printer."""
         try:
-            return self.data.get("identity").get("serial_num")
+            return cast(str, self.data.get("identity", {}).get("serial_num"))
         except (KeyError, AttributeError):
             return None
 
     def hostname(self) -> Optional[str]:
         """Return the hostname of the printer."""
         try:
-            return self.data.get("identity").get("host_name")
+            return cast(str, self.data.get("identity", {}).get("host_name"))
         except (KeyError, AttributeError):
             return None
 
     def device_status(self) -> SyncthruState:
         """Fetch the raw device status"""
         try:
-            return SyncthruState(int(self.data.get("status").get("hrDeviceStatus")))
+            return SyncthruState(int(self.data.get("status", {}).get("hrDeviceStatus")))
         except (ValueError, TypeError):
             return SyncthruState.INVALID
 
     def device_status_details(self) -> str:
         """Return the detailed (display) status of the device as string."""
-        head = self.data.get("status")
+        head = self.data.get("status", {})
         status_display = [
             head.get("status{}".format(i), "").strip() for i in [1, 2, 3, 4]
         ]

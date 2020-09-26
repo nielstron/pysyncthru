@@ -1,12 +1,7 @@
 import os
 import urllib.parse
+from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-
-try:
-    from http import HTTPStatus
-except ImportError:
-    # Backwards compatability
-    import http.client as HTTPStatus
 import posixpath
 from pathlib import Path
 

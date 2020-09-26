@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 RAW = {
     "status": {
         "hrDeviceStatus": 2,
@@ -116,4 +118,4 @@ RAW = {
     "GXI_IMAGING_MAGENTA_VALID": 1,
     "GXI_IMAGING_YELLOW_VALID": 1,
     "GXI_SUPPORT_PAPER_SETTING": 1,
-}
+}  # type: Dict[str, Any]

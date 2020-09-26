@@ -37,7 +37,7 @@ class SyncThru:
     DRUM = "drum"
     TRAY = "tray"
 
-    def __init__(self, ip, session) -> None:
+    def __init__(self, ip: str, session: aiohttp.ClientSession) -> None:
         """Initialize the the printer."""
         self.url = construct_url(ip)
         self._session = session
@@ -125,7 +125,7 @@ class SyncThru:
         except (KeyError, AttributeError):
             return {}
 
-    def raw(self) -> Dict:
+    def raw(self) -> Dict[str, Any]:
         """Return all details of the printer."""
         try:
             return self.data

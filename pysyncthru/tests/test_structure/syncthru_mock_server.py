@@ -4,6 +4,7 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import posixpath
 from pathlib import Path
+from typing import Optional, cast
 
 SERVER_DIR = Path(__file__).parent or Path(".")
 
@@ -12,21 +13,21 @@ class SyncThruServer(HTTPServer):
 
     blocked = False
 
-    def set_blocked(self):
+    def set_blocked(self) -> None:
         self.blocked = True
 
-    def unset_blocked(self):
+    def unset_blocked(self) -> None:
         self.blocked = False
 
 
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.server.blocked:
+    def do_GET(self) -> None:
+        if cast(SyncThruServer, self.server).blocked:
             self.send_error(403, "Access denied because server blocked")
         else:
             super(SyncThruRequestHandler, self).do_GET()
 
-    def translate_path(self, path):
+    def translate_path(self, path: str) -> str:
         """Translate a /-separated PATH to the local filename syntax.
 
         Components that mean special things to the local file system
@@ -45,8 +46,7 @@ class SyncThruRequestHandler(SimpleHTTPRequestHandler):
         except UnicodeDecodeError:
             path = urllib.parse.unquote(path)
         path = posixpath.normpath(path)
-        words = path.split("/")
-        words = filter(None, words)
+        words = filter(None, path.split("/"))
         path = str(SERVER_DIR.absolute())
         for word in words:
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
@@ -57,7 +57,9 @@ class SyncThruRequestHandler(SimpleHTTPRequestHandler):
             path += "/"
         return path
 
-    def send_error(self, code, message=None, explain=None):
+    def send_error(
+        self, code: int, message: Optional[str] = None, explain: Optional[str] = None
+    ) -> None:
         """
         Send syncthru error page
         :param code:
@@ -84,7 +86,7 @@ class SyncThruRequestHandler(SimpleHTTPRequestHandler):
             with SERVER_DIR.joinpath(".error.html").open("rb") as file:
                 body = file.read()
             self.send_header("Content-Type", self.error_content_type)
-            self.send_header("Content-Length", int(len(body)))
+            self.send_header("Content-Length", str(len(body)))
         self.end_headers()
 
         if self.command != "HEAD" and body:

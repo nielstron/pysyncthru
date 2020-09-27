@@ -77,28 +77,28 @@ class SyncThru:
     def model(self) -> Optional[str]:
         """Return the model name of the printer."""
         try:
-            return cast(str, self.data.get("identity", {}).get("model_name"))
+            return cast(Dict[str, str], self.data.get("identity", {})).get("model_name")
         except (KeyError, AttributeError):
             return None
 
     def location(self) -> Optional[str]:
         """Return the location of the printer."""
         try:
-            return cast(str, self.data.get("identity", {}).get("location"))
+            return cast(Dict[str, str], self.data.get("identity", {})).get("location")
         except (KeyError, AttributeError):
             return None
 
     def serial_number(self) -> Optional[str]:
         """Return the serial number of the printer."""
         try:
-            return cast(str, self.data.get("identity", {}).get("serial_num"))
+            return cast(Dict[str, str], self.data.get("identity", {})).get("serial_num")
         except (KeyError, AttributeError):
             return None
 
     def hostname(self) -> Optional[str]:
         """Return the hostname of the printer."""
         try:
-            return cast(str, self.data.get("identity", {}).get("host_name"))
+            return cast(Dict[str, str], self.data.get("identity", {})).get("host_name")
         except (KeyError, AttributeError):
             return None
 

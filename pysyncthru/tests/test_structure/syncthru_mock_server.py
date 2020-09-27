@@ -13,13 +13,6 @@ class SyncThruServer(HTTPServer):
 
     blocked = False
 
-    def __init__(
-        self,
-        server_address: Tuple[str, int],
-        RequestHandlerClass: "SyncThruRequestHandler",
-    ) -> None:
-        super().__init__(server_address, RequestHandlerClass)
-
     def set_blocked(self) -> None:
         self.blocked = True
 
@@ -28,6 +21,12 @@ class SyncThruServer(HTTPServer):
 
 
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
+    def __init__(
+        self, request: bytes, client_address: Tuple[str, int], server: SyncThruServer
+    ) -> None:
+        self.server = server  # type: SyncThruServer
+        super().__init__(request, client_address, server)
+
     def do_GET(self) -> None:
         if self.server.blocked:
             self.send_error(403, "Access denied because server blocked")

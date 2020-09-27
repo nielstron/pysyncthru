@@ -146,7 +146,7 @@ class SyncThru:
                 toner_status[color] = {}
         return toner_status
 
-    def input_tray_status(self, filter_supported: bool = True) -> Dict[int, Any]:
+    def input_tray_status(self, filter_supported: bool = True) -> Dict[str, Any]:
         """Return the state of all input trays."""
         tray_status = {}
         for tray in (

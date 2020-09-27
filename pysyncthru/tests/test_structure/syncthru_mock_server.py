@@ -4,7 +4,7 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import posixpath
 from pathlib import Path
-from typing import Optional, cast
+from typing import Optional, Tuple
 
 SERVER_DIR = Path(__file__).parent or Path(".")
 
@@ -12,6 +12,13 @@ SERVER_DIR = Path(__file__).parent or Path(".")
 class SyncThruServer(HTTPServer):
 
     blocked = False
+
+    def __init__(
+        self,
+        server_address: Tuple[str, int],
+        RequestHandlerClass: "SyncThruRequestHandler",
+    ) -> None:
+        super().__init__(server_address, RequestHandlerClass)
 
     def set_blocked(self) -> None:
         self.blocked = True
@@ -22,7 +29,7 @@ class SyncThruServer(HTTPServer):
 
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
-        if cast(SyncThruServer, self.server).blocked:
+        if self.server.blocked:
             self.send_error(403, "Access denied because server blocked")
         else:
             super(SyncThruRequestHandler, self).do_GET()

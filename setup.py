@@ -24,10 +24,13 @@ setup(
     py_modules=["pysyncthru"],
     packages=find_packages(),
     package_data={
+        "pysyncthru": [
+            "py.typed",
+        ],
         "pysyncthru.tests.test_structure": [
             "sws/app/information/home/home.json",
             "*.html",
-        ]
+        ],
     },
     install_requires=[
         "demjson",

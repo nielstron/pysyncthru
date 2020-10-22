@@ -8,7 +8,7 @@ matrix:
   - python: '3.6'
   - python: '3.7'
   - python: '3.8'
-    env: PRE_COMMIT=1
+    env: PRE_COMMIT=1 MYPY=1
   fast_finish: true
 dist: xenial
 sudo: true
@@ -16,10 +16,12 @@ sudo: true
 install:
 - pip install coverage coveralls
 - test ! "$PRE_COMMIT" || pip install pre-commit
+- test ! "$MYPY" || pip install "mypy>=0.782"
 - pip install -e .
 
 script:
 - test ! "$PRE_COMMIT" || pre-commit run --all-files
+- test ! "$MYPY" || mypy pysyncthru
 - coverage run --source=pysyncthru setup.py test
 
 after_success:

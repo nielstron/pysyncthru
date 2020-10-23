@@ -28,7 +28,7 @@ setup(
         ],
         "pysyncthru.tests.test_structure": [
             "sws/app/information/home/home.json",
-            "*.html",
+            ".error.html",
         ],
     },
     install_requires=[

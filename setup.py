@@ -21,7 +21,6 @@ setup(
     author="nielstron",
     author_email="n.muendler@web.de",
     url="https://github.com/nielstron/pysyncthru/",
-    py_modules=["pysyncthru"],
     packages=find_packages(),
     package_data={
         "pysyncthru": [

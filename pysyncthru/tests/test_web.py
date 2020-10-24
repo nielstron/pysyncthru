@@ -21,12 +21,12 @@ ADDRESS = "localhost"
 class SyncthruWebTest(unittest.TestCase):
 
     server = None
-    server_control = None
+    server_control = None  # type: Server
     port = 0
     url = "http://localhost:80"
-    syncthru = None
+    syncthru = None  # type: SyncThru
 
-    def setUp(self):
+    def setUp(self) -> None:
         # Create an arbitrary subclass of TCP Server as the server to be started
         # Here, it is an Simple HTTP file serving server
         handler = SyncThruRequestHandler
@@ -58,27 +58,27 @@ class SyncthruWebTest(unittest.TestCase):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(fetch())
 
-    def test_online(self):
+    def test_online(self) -> None:
         self.assertTrue(self.syncthru.is_online())
 
-    def test_status_normal(self):
+    def test_status_normal(self) -> None:
         self.assertEqual(self.syncthru.device_status(), SyncthruState.NORMAL)
 
-    def test_status_details(self):
+    def test_status_details(self) -> None:
         self.assertEqual(self.syncthru.device_status_details(), "Sleeping...")
 
-    def test_model(self):
+    def test_model(self) -> None:
         self.assertEqual(self.syncthru.model(), RAW["identity"]["model_name"])
 
-    def test_toner_filter(self):
-        self.assertEqual(
+    def test_toner_filter(self) -> None:
+        self.assertDictEqual(
             self.syncthru.toner_status(True),
             {"black": {"opt": 1, "remaining": 58, "cnt": 229, "newError": ""}},
         )
 
-    def test_toner_no_filter(self):
+    def test_toner_no_filter(self) -> None:
         empty = {"opt": 0, "remaining": 0, "cnt": 0, "newError": ""}
-        self.assertEqual(
+        self.assertDictEqual(
             self.syncthru.toner_status(False),
             {
                 "yellow": empty,
@@ -88,11 +88,11 @@ class SyncthruWebTest(unittest.TestCase):
             },
         )
 
-    def test_input_tray_filter(self):
-        self.assertEqual(
+    def test_input_tray_filter(self) -> None:
+        self.assertDictEqual(
             self.syncthru.input_tray_status(True),
             {
-                1: {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -104,11 +104,11 @@ class SyncthruWebTest(unittest.TestCase):
             },
         )
 
-    def test_input_tray_no_filter(self):
-        self.assertEqual(
+    def test_input_tray_no_filter(self) -> None:
+        self.assertDictEqual(
             self.syncthru.input_tray_status(False),
             {
-                1: {
+                "tray_1": {
                     "capa": 150,
                     "newError": "",
                     "opt": 1,
@@ -117,7 +117,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                2: {
+                "tray_2": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -126,7 +126,7 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                3: {
+                "tray_3": {
                     "capa": 0,
                     "newError": "",
                     "opt": 0,
@@ -135,28 +135,55 @@ class SyncthruWebTest(unittest.TestCase):
                     "paper_type1": 2,
                     "paper_type2": 0,
                 },
-                4: {
+                "tray_4": {
                     "capa": 0,
                     "newError": "",
+                    "opt": 2,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 2,
+                    "paper_type2": 0,
+                },
+                "tray_5": {
+                    "opt": 0,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 0,
+                    "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "0",
+                },
+                "mp": {
                     "opt": 0,
                     "paper_size1": 0,
                     "paper_size2": 0,
                     "paper_type1": 2,
                     "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "",
+                },
+                "manual": {
+                    "opt": 0,
+                    "paper_size1": 0,
+                    "paper_size2": 0,
+                    "paper_type1": 2,
+                    "paper_type2": 0,
+                    "capa": 0,
+                    "newError": "",
                 },
             },
         )
 
-    def test_output_tray(self):
+    def test_output_tray(self) -> None:
         self.assertEqual(
             self.syncthru.output_tray_status(),
             {0: {"capacity": 100, "name": 1, "status": ""}},
         )
 
-    def test_drum_status_filter(self):
+    def test_drum_status_filter(self) -> None:
         self.assertEqual(self.syncthru.drum_status(True), {})
 
-    def test_drum_status_no_filter(self):
+    def test_drum_status_no_filter(self) -> None:
         self.assertEqual(
             self.syncthru.drum_status(False),
             {
@@ -167,19 +194,19 @@ class SyncthruWebTest(unittest.TestCase):
             },
         )
 
-    def test_location(self):
+    def test_location(self) -> None:
         self.assertEqual(self.syncthru.location(), RAW["identity"]["location"])
 
-    def test_serial_number(self):
+    def test_serial_number(self) -> None:
         self.assertEqual(self.syncthru.serial_number(), RAW["identity"]["serial_num"])
 
-    def test_hostname(self):
+    def test_hostname(self) -> None:
         self.assertEqual(self.syncthru.hostname(), RAW["identity"]["host_name"])
 
-    def test_cap(self):
+    def test_cap(self) -> None:
         self.assertEqual(self.syncthru.capability(), RAW["capability"])
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.server_control.stop_server()
         pass
 
@@ -187,12 +214,12 @@ class SyncthruWebTest(unittest.TestCase):
 class NonSyncthruWebTest(unittest.TestCase):
 
     server = None
-    server_control = None
+    server_control = None  # type: Server
     port = 0
     url = "http://localhost:80"
-    syncthru = None
+    syncthru = None  # type: SyncThru
 
-    def test_no_syncthru(self):
+    def test_no_syncthru(self) -> None:
         """Test that an error is thrown when no syncthru is supported"""
         # Create an arbitrary subclass of TCP Server as the server to be started
         # Here, it is an Simple HTTP file serving server
@@ -222,7 +249,7 @@ class NonSyncthruWebTest(unittest.TestCase):
 
         try:
 
-            async def fetch():
+            async def fetch() -> None:
                 async with aiohttp.ClientSession() as session:
                     self.syncthru = SyncThru(self.url, session)
                     await self.syncthru.update()
@@ -235,10 +262,10 @@ class NonSyncthruWebTest(unittest.TestCase):
         except ValueError:
             pass
 
-    def test_offline_unknown(self):
+    def test_offline_unknown(self) -> None:
         """Test that nothing is returned when syncthru is offline"""
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(self.url, session)
                 await self.syncthru.update()

@@ -16,18 +16,16 @@ short_description = "{}".format(
 
 setup(
     name="PySyncThru",
-    version="0.7.1",
+    version="0.7.2",
     description=short_description,
     author="nielstron",
     author_email="n.muendler@web.de",
     url="https://github.com/nielstron/pysyncthru/",
-    py_modules=["pysyncthru"],
-    packages=find_packages(),
+    packages=find_packages(exclude=("pysyncthru.tests", "pysyncthru.tests.*")),
     package_data={
-        "pysyncthru.tests.test_structure": [
-            "sws/app/information/home/home.json",
-            "*.html",
-        ]
+        "pysyncthru": [
+            "py.typed",
+        ],
     },
     install_requires=[
         "demjson",

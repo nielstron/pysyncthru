@@ -1,22 +1,27 @@
 language: python
+cache:
+  pip: true
+  directories: [$HOME/.cache/pre-commit]
 matrix:
   include:
   - python: '3.5'
-    env: NO_BLACK=1
   - python: '3.6'
   - python: '3.7'
   - python: '3.8'
+    env: PRE_COMMIT=1 MYPY=1
   fast_finish: true
 dist: xenial
 sudo: true
 
 install:
 - pip install coverage coveralls
-- test "$NO_BLACK" || pip install black
+- test ! "$PRE_COMMIT" || pip install pre-commit
+- test ! "$MYPY" || pip install "mypy>=0.782"
 - pip install -e .
 
 script:
-- test "$NO_BLACK" || black . --check
+- test ! "$PRE_COMMIT" || pre-commit run --all-files
+- test ! "$MYPY" || mypy pysyncthru
 - coverage run --source=pysyncthru setup.py test
 
 after_success:
@@ -27,7 +32,7 @@ deploy:
   provider: pypi
   on:
     branch: master
-    python: "3.7"
+    python: "3.8"
   skip_existing: true
   username: "nielstron"
   password:

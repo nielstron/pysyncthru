@@ -21,15 +21,10 @@ setup(
     author="nielstron",
     author_email="n.muendler@web.de",
     url="https://github.com/nielstron/pysyncthru/",
-    py_modules=["pysyncthru"],
-    packages=find_packages(),
+    packages=find_packages(exclude=("pysyncthru.tests", "pysyncthru.tests.*")),
     package_data={
         "pysyncthru": [
             "py.typed",
-        ],
-        "pysyncthru.tests.test_structure": [
-            "sws/app/information/home/home.json",
-            "*.html",
         ],
     },
     install_requires=[

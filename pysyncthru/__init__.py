@@ -151,7 +151,7 @@ class SyncThru:
         tray_status = {}
         for tray in (
             *("{}_{}".format(SyncThru.TRAY, i) for i in range(1, 6)),
-            "mp",  # TODO what does mp stand for?
+            "mp",  # mp = multi-purpose
             "manual",
         ):
             try:

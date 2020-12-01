@@ -20,8 +20,6 @@ The package supports the following data provided by the printers:
 Sadly it seems like there is no official API, so fixes are welcome and likely 
 needed!
 
-If your printer's language is not English, the functions might not work.
-
 ## Usage
 
 ```python

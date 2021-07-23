@@ -50,6 +50,7 @@ deploy:
     file: "*"
     cleanup: true
     overwrite: false
+    skip_existing: true
     on:
       branch: master
       condition: "$TRAVIS_EVENT_TYPE = push"

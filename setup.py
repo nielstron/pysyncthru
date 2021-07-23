@@ -16,7 +16,7 @@ short_description = "{}".format(
 
 setup(
     name="PySyncThru",
-    version="0.7.4",
+    version="0.7.5",
     description=short_description,
     author="nielstron",
     author_email="n.muendler@web.de",

@@ -1,0 +1,282 @@
+
+<!-- saved from url=(0030)http://192.168.137.35/home.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SWS - Home </title>
+
+<link rel="StyleSheet" type="text/css" href="./home_files/style.css">
+<script src="./home_files/cookieCode.js"></script>
+<script src="./home_files/common.js"></script>
+
+<script language="javascript">
+
+	HCF_NOTINSTALLED	= 0x0
+	TRAY2_HCF_INSTALLED	= 0x01
+	TRAY3_HCF_INSTALLED	= 0x02
+	TRAY4_HCF_INSTALLED	= 0x04
+
+var faxTrayVisible = "Supported";
+var copyTrayVisible = "Supported";
+var tray2Installed = "Not Installed";
+var tray3Installed = "Invisible";
+var tray4Installed = "Invisible";
+var hcfInstalled = "0";
+var drumInstalled = "Not Installed";
+var faxInstalled = "Installed";
+
+var mfTrayStatus = "Ready";
+var tray1Status = "Ready";
+var tray2Status = "Ready";
+
+//function to refresh status frame
+function refreshStatus()
+{
+	if(document.all)
+		document.statusFrame.location.replace("status.htm");
+	else
+		window.location = window.location;
+}
+
+//function to remove home page cookie
+function removeCookie()
+{
+	//parent.topFrame.DeleteCookie(parent.topFrame.INFO_MENU);
+}
+</script>
+
+</head>
+
+<body class="property" onunload="removeCookie()">
+
+
+<table bgcolor="F1F1F1" class="allNormalTable" cellspacing="0" cellpadding="0">
+  <tbody><tr>
+    <td align="left" valign="top">
+
+<!--General-->
+
+      <table class="propertyTable">
+        <tbody><tr>
+          <td colspan="2" width="100%">
+
+          	<table class="allNormalTable" cellspacing="0" cellpadding="0">
+          	<tbody><tr><td width="10%">
+          	<font class="plainFont13Bold">
+          		&nbsp;<img align="absmiddle" border="0" src="./home_files/1_arrow.gif">&nbsp;Home&nbsp;&gt;&gt;
+          	</font>
+          	</td>
+          	</tr>
+          	</tbody></table>
+
+          </td>
+	 	</tr>
+        <tr>
+          <td>
+			  <table class="allNormalTable">
+				<tbody><tr>
+				<td width="350" class="headFont" valign="top">
+
+				<table class="normalTable" width="100%" cellspacing="5" cellpadding="5">
+				  <tbody><tr>
+					<td colspan="2" class="headFont">
+					<img align="absmiddle" border="0" src="./home_files/2_arrow.gif">&nbsp;Supplies Status
+					</td>
+					</tr>
+
+				  <tr>
+					<td width="50%" class="plainFont">
+					&nbsp;&nbsp;&nbsp;Black Toner&nbsp;:
+					</td>
+					<td class="valueFont">
+					Ready
+					</td>
+					</tr>
+
+	<script language="JavaScript" type="text/javascript">
+
+		if(drumInstalled == "Installed")
+		{
+			document.writeln( "<tr> <td width=32% > <font class=plainFont13>&nbsp;&nbsp;&nbsp;Imaging Unit&nbsp;:</font> </td>");
+			document.writeln( "<td class=valueFont> Unidentified </td> </tr>");
+		}
+
+/* Comment out Paper Sources
+		if(faxInstalled == "Installed"|| copyTrayVisible  != "Invisible")
+		{
+			document.writeln( "<TR><TD colspan=2 align=center class=plainFont><HR size=1 noshade class=plainHR></TD></TR>");
+			document.writeln( "<tr> <td colspan=2 class=headFont> <img align=absmiddle border=0 src=\"images/2_arrow.gif\">&nbsp;Paper Sources </td> </tr>");
+		}
+
+		if(copyTrayVisible   != "Invisible")
+		{
+			document.writeln( "<tr><td ><font class=plainFont13>&nbsp;&nbsp;&nbsp;Copy Tray&nbsp;:</font></td>");
+			document.writeln( "<td class=valueFont>Auto</td>");
+			document.writeln( "</tr>");
+		}
+
+		if(faxInstalled == "Installed")
+		{
+//			document.writeln( "<tr><td width=32% ><font class=plainFont13>&nbsp;&nbsp;&nbsp;Fax Tray&nbsp;:</font></td>");
+//			document.writeln( "<td class=valueFont>Auto</td>");
+//			document.writeln( "</tr>");
+		}
+End of comment out Paper Sources Menu */
+	</script>
+
+		<tr><td colspan="2" align="center" class="plainFont"><hr size="1" noshade="" class="plainHR"></td></tr>
+				  <tr>
+					<td colspan="2" class="headFont">
+					<img align="absmiddle" border="0" src="./home_files/2_arrow.gif">&nbsp;Input Trays
+					</td>
+					</tr>
+
+				  <tr>
+					<td class="plainFont">
+					&nbsp;&nbsp;&nbsp;Tray 1&nbsp;:
+					</td>
+					<td class="valueFont">
+					Ready
+					</td>
+					</tr>
+
+	<script language="JavaScript" type="text/javascript">
+
+		if(tray2Installed == "Installed")
+		{
+			if(hcfInstalled==TRAY2_HCF_INSTALLED)
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 2(HCF)&nbsp;:</td>");
+			else
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 2&nbsp;:</td>");
+			document.writeln( "<td class=valueFont>Ready</td></tr>");
+		}
+
+		if(tray3Installed == "Installed")
+		{
+			if(hcfInstalled==TRAY3_HCF_INSTALLED)
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 3(HCF)&nbsp;:</td>");
+			else
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 3&nbsp;:</td>");
+			document.writeln( "<td class=valueFont>Ready</td></tr>");
+		}
+
+		if(tray4Installed == "Installed")
+		{
+			if(hcfInstalled==TRAY4_HCF_INSTALLED)
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 4(HCF)&nbsp;:</td>");
+			else
+				document.writeln( "<tr><td width=32% class=plainFont>&nbsp;&nbsp;&nbsp;Tray 4&nbsp;:</td>");
+			document.writeln( "<td class=valueFont>Ready</td></tr>");
+		}
+	</script>
+  	</tbody></table>
+				</td>
+				<td align="left" valign="top">
+
+<!--Printer image and status-->
+
+				<table bgcolor="F1F1F1" border="0" height="100%" cellspacing="1" cellpadding="0" valign="top">
+				  <tbody><tr>
+					<td>&nbsp;
+					</td>
+				  </tr>
+				  <tr>
+					<td height="144">
+					  <table bgcolor="A7A7A7" width="184" border="0" cellspacing="1" cellpadding="0">
+						<tbody><tr>
+						  <td valign="top" height="144"><img src="./home_files/machineImage_15868.gif" width="184" height="144"></td>
+						</tr>
+					  </tbody></table>
+					</td>
+				  </tr>
+				  <tr>
+					  <td height="55">
+
+						<table bgcolor="A7A7A7" width="184" border="0" cellspacing="1" cellpadding="0">
+							<tbody><tr><td>
+							<iframe src="./home_files/status.html" name="statusFrame" scrolling="auto" marginwidth="0" marginheight="0" frameborder="0" align="middle" width="184" height="43"></iframe>
+							</td>
+							</tr>
+						  </tbody></table>
+
+					  </td>
+				  </tr>
+<!--Printer info-->
+			 	<tr>
+				  <td valign="top" align="center">
+				  <table bgcolor="A7A7A7" border="0" height="150" width="186" cellspacing="1" cellpadding="0" valign="top">
+					<tbody><tr>
+					<td>
+						<table bgcolor="F8F8F8" width="100%" border="0" cellspacing="3" cellpadding="1" style="table-layout:fixed; word-break:break-all;">
+					   <tbody><tr>
+							<td>
+								<font class="lcdFont">SCX-4623 Series</font>
+							</td>
+					   </tr>
+					   <tr>
+							<td>
+								<font class="lcdFont">Name : </font>
+								<font color="#0049D0" class="lcdFont">PegelPrinter2D</font>
+							</td>
+					   </tr>
+					   <tr>
+							<td>
+								<font class="lcdFont">IP Address : </font>
+								<font color="#0049D0" class="lcdFont">192.168.137.35</font>
+							</td>
+					   </tr>
+					   <tr>
+							<td>
+								<font class="lcdFont">Contact : </font>
+								<font color="#0049D0" class="lcdFont">
+								Administrator
+								</font>
+							</td>
+					   </tr>
+					   <tr>
+							<td>
+								<font class="lcdFont">Location : </font>
+								<font color="#0049D0" class="lcdFont">
+								
+								</font>
+							</td>
+					   </tr>
+					   <tr>
+							<td align="center">
+								<br><input class="butn" type="button" name="refresh1" onclick="refreshStatus()" value="Refresh">
+							</td>
+					   </tr>
+					   </tbody></table>
+					</td>
+					</tr>
+					</tbody></table>
+					</td>
+					</tr>
+				</tbody></table>
+				</td>
+				</tr>
+			  </tbody></table>
+          </td>
+		 </tr>
+     </tbody></table>
+
+    </td>
+  </tr>
+
+<!--copyright start-->
+
+  <tr>
+    <td class="copyright">
+		<div id="copyright">undefined</div>
+<script>
+	DivLayer(parent.COPYRIGHT,'copyright');
+</script>
+
+	</td>
+  </tr>
+
+<!--copyright end-->
+
+</tbody></table>
+
+
+
+</body></html>

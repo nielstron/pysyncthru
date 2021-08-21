@@ -1,19 +1,68 @@
 """Connect to a Samsung printer with SyncThru service."""
 
 import demjson
+from html.parser import HTMLParser
 
 import aiohttp
+import asyncio
 
 from typing import Any, Dict, Optional, cast
 from enum import Enum
 
-ENDPOINT = "/sws/app/information/home/home.json"
+ENDPOINT_API = "/sws/app/information/home/home.json"
+ENDPOINT_HTML_SUPPLIES_STATUS = "/information/supplies_status.htm"
+ENDPOINT_HTML_HOME = "/home.htm"
+
+
+class HomeParser(HTMLParser):
+    def __init__(self, identity_data: dict):
+        super().__init__()
+        self._data = identity_data
+
+    _first_lcdFont = True
+    _model_name = False
+    _name_tag = False
+    _name_key = None
+    _value_tag = False
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "font" and ("class", "lcdFont") in attrs:
+            if self._first_lcdFont:
+                self._model_name = True
+                self._first_lcdFont = False
+            else:
+                self._name_tag = "color" not in map(lambda x: x[0], attrs)
+                self._value_tag = not self._name_tag
+
+    def handle_data(self, data: str):
+        if self._model_name:
+            self._data["model_name"] = data.strip()
+            self._model_name = False
+        if self._name_tag:
+            data = data.replace(":", "").strip().replace(" ", "_").lower()
+            if data == "name":
+                data = "host_name"
+            self._name_key = data
+            # we assume that the whole tag is read at once
+            # (which is not necessarily true)
+            self._name_tag = False
+        if self._value_tag:
+            self._data[self._name_key] = data.strip()
+            # we assume that the whole tag is read at once
+            # (which is not necessarily true)
+            self._value_tag = False
+
+
+class ConnectionMode(Enum):
+    AUTO = -1
+    API = 1
+    HTML = 2
 
 
 class SyncthruState(Enum):
     INVALID = -1  # invalid state for values returned that are not in [1,5]
     OFFLINE = 0
-    UNKNOWN = 1
+    UNKNOWN = 1  # not offline but unknown
     NORMAL = 2
     WARNING = 3
     TESTING = 4
@@ -37,27 +86,54 @@ class SyncThru:
     DRUM = "drum"
     TRAY = "tray"
 
-    def __init__(self, ip: str, session: aiohttp.ClientSession) -> None:
+    def __init__(
+        self,
+        ip: str,
+        session: aiohttp.ClientSession,
+        connection_mode=ConnectionMode.AUTO,
+    ) -> None:
         """Initialize the the printer."""
         self.url = construct_url(ip)
         self._session = session
         self.data = {}  # type: Dict[str, Any]
+        self.connection_mode = connection_mode
 
     async def update(self) -> None:
+        """
+        Retrieve the data from the printer and caches is in the class
+        Throws ValueError if host does not support SyncThru
+        """
+        self.data = await self._current_data()
+
+    async def _current_data(self) -> dict:
         """
         Retrieve the data from the printer.
         Throws ValueError if host does not support SyncThru
         """
-        url = "{}{}".format(self.url, ENDPOINT)
+        if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
+            url = "{}{}".format(self.url, ENDPOINT_API)
 
-        try:
-            async with self._session.get(url) as response:
-                json_dict = demjson.decode(await response.text(), strict=False)
-        except aiohttp.ClientError:
-            json_dict = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
-        except demjson.JSONDecodeError:
-            raise ValueError("Invalid host, does not support SyncThru.")
-        self.data = json_dict
+            try:
+                async with self._session.get(url) as response:
+                    return demjson.decode(await response.text(), strict=False)
+            except (aiohttp.ClientError, asyncio.TimeoutError):
+                return {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
+            except demjson.JSONDecodeError:
+                if self.connection_mode != ConnectionMode.AUTO:
+                    raise ValueError("Invalid host, does not support SyncThru.")
+
+        if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
+            home_url = "{}{}".format(self.url, ENDPOINT_HTML_HOME)
+            identity_data = {}
+            try:
+                async with self._session.get(home_url) as response:
+                    HomeParser(identity_data).feed(await response.text())
+                    return {
+                        "status": {"hrDeviceStatus": SyncthruState.UNKNOWN.value},
+                        "identity": identity_data,
+                    }
+            except (aiohttp.ClientError, asyncio.TimeoutError):
+                return {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
 
     def is_online(self) -> bool:
         """Return true if printer is not offline."""

@@ -1,6 +1,6 @@
-from html.parser import HTMLParser
-from typing import Dict, Any, List, Tuple, Callable
 import re
+from html.parser import HTMLParser
+from typing import Any, Callable, Dict, List, Tuple
 
 _VARIABLE_DICT = {
     "BlackTonerPer": lambda x: {"toner_black": {"opt": 1, "remaining": int(x)}},

@@ -1,12 +1,11 @@
 """Connect to a Samsung printer with SyncThru service."""
 
-import demjson
+import asyncio
+from enum import Enum
+from typing import Any, Dict, Optional, cast
 
 import aiohttp
-import asyncio
-
-from typing import Any, Dict, Optional, cast
-from enum import Enum
+import demjson
 
 from .htmlparsers import HomeParser, VariableParser
 

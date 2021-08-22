@@ -1,5 +1,5 @@
 from html.parser import HTMLParser
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Callable
 import re
 
 _VARIABLE_DICT = {
@@ -8,7 +8,7 @@ _VARIABLE_DICT = {
     "tray2Installed": lambda x: {"tray2": {"opt": 1 if x == "Installed" else 0}},
     "tray3Installed": lambda x: {"tray3": {"opt": 1 if x == "Installed" else 0}},
     "tray4Installed": lambda x: {"tray4": {"opt": 1 if x == "Installed" else 0}},
-}
+}  # type: Dict[str, Callable[[str], Dict[str, Any]]]
 _KNOWN_VARIABLES = "|".join(_VARIABLE_DICT.keys())
 _VARIABLES_REG = (
     r"var\s+(?P<varname>{})\s*=\s*[\"']?(?P<varval>[a-zA-Z0-9]+)[\"']?\s*;".format(

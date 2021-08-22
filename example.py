@@ -12,7 +12,7 @@ from pysyncthru import SyncThru
 IP_PRINTER = "192.168.0.25"
 
 
-async def main():
+async def main() -> None:
     async with aiohttp.ClientSession() as session:
         printer = SyncThru(IP_PRINTER, session)
         await printer.update()
@@ -27,7 +27,7 @@ async def main():
             # Get the details of a cartridge
             print("Toner Cyan details:", printer.toner_status()["cyan"])
             # Get the details about a tray
-            print("Tray 1 Capacity:", printer.input_tray_status()[1]["capa"])
+            print("Tray 1 Capacity:", printer.input_tray_status()["tray_1"]["capa"])
         # Print all available details from the printer
         print("All data:\n", printer.raw())
 

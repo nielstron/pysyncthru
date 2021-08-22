@@ -119,3 +119,28 @@ RAW = {
     "GXI_IMAGING_YELLOW_VALID": 1,
     "GXI_SUPPORT_PAPER_SETTING": 1,
 }  # type: Dict[str, Any]
+
+RAW_HTML = {
+    "status": {
+        "hrDeviceStatus": 1,
+    },
+    "identity": {
+        "model_name": "SCX-4623 Series",
+        "host_name": "PegelPrinter2D",
+        "location": "",
+        "ip_addr": "192.168.137.35",
+    },
+    "toner_black": {"opt": 1, "remaining": 66},
+    "tray1": {
+        "opt": 1,
+    },
+    "tray2": {
+        "opt": 0,
+    },
+    "tray3": {
+        "opt": 0,
+    },
+    "tray4": {
+        "opt": 0,
+    },
+}  # type: Dict[str, Any]

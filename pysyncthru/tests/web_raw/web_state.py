@@ -130,4 +130,17 @@ RAW_HTML = {
         "location": "",
         "ip_addr": "192.168.137.35",
     },
+    "toner_black": {"opt": 1, "remaining": 66},
+    "tray1": {
+        "opt": 1,
+    },
+    "tray2": {
+        "opt": 0,
+    },
+    "tray3": {
+        "opt": 0,
+    },
+    "tray4": {
+        "opt": 0,
+    },
 }  # type: Dict[str, Any]

@@ -263,6 +263,22 @@ class SyncthruHTMLTest(unittest.TestCase):
     def test_hostname(self) -> None:
         self.assertEqual(self.syncthru.hostname(), RAW_HTML["identity"]["host_name"])
 
+    def test_toner_filter(self) -> None:
+        self.assertDictEqual(
+            self.syncthru.toner_status(True),
+            {"black": {"opt": 1, "remaining": 66}},
+        )
+
+    def test_input_tray_filter(self) -> None:
+        self.assertDictEqual(
+            self.syncthru.input_tray_status(True),
+            {
+                "tray_1": {
+                    "opt": 1,
+                }
+            },
+        )
+
 
 class NonSyncthruWebTest(unittest.TestCase):
 

@@ -1,56 +1,18 @@
 """Connect to a Samsung printer with SyncThru service."""
 
 import demjson
-from html.parser import HTMLParser
 
 import aiohttp
 import asyncio
 
-from typing import Any, Dict, Optional, cast, List, Tuple
+from typing import Any, Dict, Optional, cast
 from enum import Enum
 
+from .htmlparsers import HomeParser, VariableParser
+
 ENDPOINT_API = "/sws/app/information/home/home.json"
-ENDPOINT_HTML_SUPPLIES_STATUS = "/information/supplies_status.htm"
+ENDPOINT_HTML_SUPPLIES_STATUS = "/Information/supplies_status.htm"
 ENDPOINT_HTML_HOME = "/home.htm"
-
-
-class HomeParser(HTMLParser):
-    def __init__(self, identity_data: Dict[str, Any]):
-        super().__init__()
-        self._data = identity_data
-
-    _first_lcdFont = True
-    _model_name = False
-    _name_tag = False
-    _name_key: str = ""
-    _value_tag = False
-
-    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Any]]) -> None:
-        if tag == "font" and ("class", "lcdFont") in attrs:
-            if self._first_lcdFont:
-                self._model_name = True
-                self._first_lcdFont = False
-            else:
-                self._name_tag = "color" not in map(lambda x: x[0], attrs)
-                self._value_tag = not self._name_tag
-
-    def handle_data(self, data: str) -> None:
-        if self._model_name:
-            self._data["model_name"] = data.strip()
-            self._model_name = False
-        if self._name_tag:
-            data = data.replace(":", "").strip().replace(" ", "_").lower()
-            if data == "name":
-                data = "host_name"
-            self._name_key = data
-            # we assume that the whole tag is read at once
-            # (which is not necessarily true)
-            self._name_tag = False
-        if self._value_tag:
-            self._data[self._name_key] = data.strip()
-            # we assume that the whole tag is read at once
-            # (which is not necessarily true)
-            self._value_tag = False
 
 
 class ConnectionMode(Enum):
@@ -110,6 +72,7 @@ class SyncThru:
         Retrieve the data from the printer.
         Throws ValueError if host does not support SyncThru
         """
+        data = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
             url = "{}{}".format(self.url, ENDPOINT_API)
 
@@ -118,6 +81,8 @@ class SyncThru:
                     res = demjson.decode(
                         await response.text(), strict=False
                     )  # type: Dict[str, Any]
+                    # if we get something back from this endpoint,
+                    # we directly return it
                     return res
             except (aiohttp.ClientError, asyncio.TimeoutError):
                 pass
@@ -126,19 +91,29 @@ class SyncThru:
                     raise ValueError("Invalid host, does not support SyncThru.")
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
+
             home_url = "{}{}".format(self.url, ENDPOINT_HTML_HOME)
             identity_data: Dict[str, Any] = {}
             try:
                 async with self._session.get(home_url) as response:
-                    HomeParser(identity_data).feed(await response.text())
-                    return {
-                        "status": {"hrDeviceStatus": SyncthruState.UNKNOWN.value},
-                        "identity": identity_data,
-                    }
+                    home_res = await response.text()
+                HomeParser(identity_data).feed(home_res)
+                VariableParser(data).feed(home_res)
+                data["identity"] = identity_data
+                data["status"]["hrDeviceStatus"] = SyncthruState.UNKNOWN.value
             except (aiohttp.ClientError, asyncio.TimeoutError):
                 pass
 
-        return {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
+            supplies_url = "{}{}".format(self.url, ENDPOINT_HTML_SUPPLIES_STATUS)
+            try:
+                async with self._session.get(supplies_url) as response:
+                    supplies_res = await response.text()
+                VariableParser(data).feed(supplies_res)
+                data["status"]["hrDeviceStatus"] = SyncthruState.UNKNOWN.value
+            except (aiohttp.ClientError, asyncio.TimeoutError):
+                pass
+
+        return data
 
     def is_online(self) -> bool:
         """Return true if printer is not offline."""

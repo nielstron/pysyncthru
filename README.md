@@ -7,10 +7,12 @@
 A package that connects to a Samsung printer in the local network that
 makes use of the SyncThru web service and provides data
 that is provided via the JSON API of the device.
+If the API cannot be reached (because on some printers it is not supported),
+it tries to parse other pages in the webinterface and extract information.
+
 It is able to read the system, toner and tray status and provides method 
 wrappers to access them.
-
-The package supports the following data provided by the printers:
+Overall, the following data is usually provided by the printers:
 
 - Device / System status
 - Drum / Toner status

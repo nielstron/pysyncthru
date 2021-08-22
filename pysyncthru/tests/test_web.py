@@ -12,13 +12,13 @@ import time
 # For the tests
 import aiohttp
 import asyncio
-from pysyncthru import SyncThru, SyncthruState, ConnectionMode
-from .web_raw.web_state import RAW, RAW_HTML
+from pysyncthru import SyncThru, SyncthruState
+from .web_raw.web_state import RAW
 
 ADDRESS = "localhost"
 
 
-class SyncthruAPITest(unittest.TestCase):
+class SyncthruWebTest(unittest.TestCase):
 
     server = None
     server_control = None  # type: Server
@@ -52,9 +52,7 @@ class SyncthruAPITest(unittest.TestCase):
 
         async def fetch():
             async with aiohttp.ClientSession() as session:
-                self.syncthru = SyncThru(
-                    self.url, session, connection_mode=ConnectionMode.API
-                )
+                self.syncthru = SyncThru(self.url, session)
                 await self.syncthru.update()
 
         loop = asyncio.get_event_loop()
@@ -210,74 +208,7 @@ class SyncthruAPITest(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.server_control.stop_server()
-
-
-class SyncthruHTMLTest(unittest.TestCase):
-
-    server = None
-    server_control = None  # type: Server
-    port = 0
-    url = "http://localhost:80"
-    syncthru = None  # type: SyncThru
-
-    def setUp(self) -> None:
-        # Create an arbitrary subclass of TCP Server as the server to be started
-        # Here, it is an Simple HTTP file serving server
-        handler = SyncThruRequestHandler
-
-        max_retries = 10
-        r = 0
-        while not self.server:
-            try:
-                # Connect to any open port
-                self.server = SyncThruServer((ADDRESS, 0), handler)
-            except OSError:
-                if r < max_retries:
-                    r += 1
-                else:
-                    raise
-                time.sleep(1)
-
-        self.server_control = Server(self.server)
-        self.port = self.server_control.get_port()
-        self.url = "{}:{}".format(ADDRESS, self.port)
-        # Start test server before running any tests
-        self.server_control.start_server()
-
-        async def fetch():
-            async with aiohttp.ClientSession() as session:
-                self.syncthru = SyncThru(
-                    self.url, session, connection_mode=ConnectionMode.HTML
-                )
-                await self.syncthru.update()
-
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(fetch())
-
-    def test_location(self) -> None:
-        self.assertEqual(self.syncthru.location(), RAW_HTML["identity"]["location"])
-
-    def test_model_name(self) -> None:
-        self.assertEqual(self.syncthru.model(), RAW_HTML["identity"]["model_name"])
-
-    def test_hostname(self) -> None:
-        self.assertEqual(self.syncthru.hostname(), RAW_HTML["identity"]["host_name"])
-
-    def test_toner_filter(self) -> None:
-        self.assertDictEqual(
-            self.syncthru.toner_status(True),
-            {"black": {"opt": 1, "remaining": 66}},
-        )
-
-    def test_input_tray_filter(self) -> None:
-        self.assertDictEqual(
-            self.syncthru.input_tray_status(True),
-            {
-                "tray_1": {
-                    "opt": 1,
-                }
-            },
-        )
+        pass
 
 
 class NonSyncthruWebTest(unittest.TestCase):
@@ -320,9 +251,7 @@ class NonSyncthruWebTest(unittest.TestCase):
 
             async def fetch() -> None:
                 async with aiohttp.ClientSession() as session:
-                    self.syncthru = SyncThru(
-                        self.url, session, connection_mode=ConnectionMode.API
-                    )
+                    self.syncthru = SyncThru(self.url, session)
                     await self.syncthru.update()
 
             loop = asyncio.get_event_loop()
@@ -338,9 +267,7 @@ class NonSyncthruWebTest(unittest.TestCase):
 
         async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
-                self.syncthru = SyncThru(
-                    self.url, session, connection_mode=ConnectionMode.API
-                )
+                self.syncthru = SyncThru(self.url, session)
                 await self.syncthru.update()
 
         loop = asyncio.get_event_loop()

@@ -126,8 +126,10 @@ RAW_HTML = {
     },
     "identity": {
         "model_name": "SCX-4623 Series",
-        "host_name": "PegelPrinter2D",
-        "location": "",
+        "host_name": "SamsungAki",
+        "location": "Viktor's office",
+        "contact": "VikTak",
+        "mac_addr": "00:15:99:85:84:A5",
         "ip_addr": "192.168.137.35",
     },
     "toner_black": {"opt": 1, "remaining": 66},

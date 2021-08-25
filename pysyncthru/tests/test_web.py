@@ -263,6 +263,9 @@ class SyncthruHTMLTest(unittest.TestCase):
     def test_hostname(self) -> None:
         self.assertEqual(self.syncthru.hostname(), RAW_HTML["identity"]["host_name"])
 
+    def test_mac_address(self) -> None:
+        self.assertEqual(self.syncthru.mac_address(), RAW_HTML["identity"]["mac_addr"])
+
     def test_toner_filter(self) -> None:
         self.assertDictEqual(
             self.syncthru.toner_status(True),

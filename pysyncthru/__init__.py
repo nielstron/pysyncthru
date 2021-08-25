@@ -91,13 +91,13 @@ class SyncThru:
 
             any_connection_successful = False
             for endpoint_url, parsers in ENDPOINT_HTML_PARSERS.items():
-                url = "{}{}".format(self.url, endpoint_url)
+                html_url = "{}{}".format(self.url, endpoint_url)
                 try:
-                    async with self._session.get(url) as response:
-                        res: str = await response.text()
+                    async with self._session.get(html_url) as response:
+                        html_res = await response.text()
                     any_connection_successful = True
                     for parser in parsers:
-                        parser(data).feed(res)
+                        parser(data).feed(html_res)
                     # if successful, set device status to unknown
                 except (aiohttp.ClientError, asyncio.TimeoutError):
                     pass
@@ -124,33 +124,35 @@ class SyncThru:
             or self.device_status() == SyncthruState.INVALID
         )
 
-    def model(self) -> Optional[str]:
-        """Return the model name of the printer."""
+    def _identity_data(self, key: str) -> Optional[str]:
         try:
-            return cast(Dict[str, str], self.data.get("identity", {})).get("model_name")
+            return cast(Dict[str, str], self.data.get("identity", {})).get(key)
         except (KeyError, AttributeError):
             return None
+
+    def model(self) -> Optional[str]:
+        """Return the model name of the printer."""
+        return self._identity_data("model_name")
 
     def location(self) -> Optional[str]:
         """Return the location of the printer."""
-        try:
-            return cast(Dict[str, str], self.data.get("identity", {})).get("location")
-        except (KeyError, AttributeError):
-            return None
+        return self._identity_data("location")
 
     def serial_number(self) -> Optional[str]:
         """Return the serial number of the printer."""
-        try:
-            return cast(Dict[str, str], self.data.get("identity", {})).get("serial_num")
-        except (KeyError, AttributeError):
-            return None
+        return self._identity_data("serial_num")
 
     def hostname(self) -> Optional[str]:
         """Return the hostname of the printer."""
-        try:
-            return cast(Dict[str, str], self.data.get("identity", {})).get("host_name")
-        except (KeyError, AttributeError):
-            return None
+        return self._identity_data("host_name")
+
+    def mac_address(self) -> Optional[str]:
+        """Return the MAC address of the printer."""
+        return self._identity_data("mac_addr")
+
+    def ip_address(self) -> Optional[str]:
+        """Return the IP address of the printer."""
+        return self._identity_data("ip_addr")
 
     def device_status(self) -> SyncthruState:
         """Fetch the raw device status"""

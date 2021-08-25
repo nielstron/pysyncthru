@@ -123,25 +123,27 @@ class GeneralProtocolParser(SyncThruParser):
             self._name_tag = ("class", "plainFont") in attrs
             self._value_tag = ("class", "valueFont") in attrs
         elif tag == "input" and self._value_tag and ("type", "text") in attrs:
-            self._data[self._name_key] = dict(attrs)["value"]
+            self._data["identity"][self._name_key] = dict(attrs)["value"]
             self._value_tag = False
 
     def handle_data(self, data: str) -> None:
         if self._name_tag:
             data = data.replace(":", "").strip().replace(" ", "_").lower()
+            if data == "mac_address":
+                data = "mac_addr"
             self._name_key = data
             # we assume that the whole tag is read at once
             # (which is not necessarily true)
             self._name_tag = False
         if self._value_tag:
-            self._data[self._name_key] = data.strip()
+            self._data["identity"][self._name_key] = data.strip()
             # we assume that the whole tag is read at once
             # (which is not necessarily true)
             self._value_tag = False
 
 
 ENDPOINT_HTML_PARSERS: Dict[str, List[Type[SyncThruParser]]] = {
-    ENDPOINT_HTML_GENERAL_PROTOCOLS: [GeneralProtocolParser],
     ENDPOINT_HTML_HOME: [HomeParser, VariableParser],
     ENDPOINT_HTML_SUPPLIES_STATUS: [VariableParser],
+    ENDPOINT_HTML_GENERAL_PROTOCOLS: [GeneralProtocolParser],
 }

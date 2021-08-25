@@ -1,0 +1,247 @@
+<body class="property" onload="callLoad()">
+
+                <table class="allnormalTable" cellspacing="0" cellpadding="0" bgcolor="#f1f1f1">
+
+                                <tbody>
+
+                                                <tr>
+
+                                                                <td valign="top">
+
+
+
+<form name="networkGeneral" action="/SaveChangesWithRestart.cgi" method="POST" target="errWin" onsubmit="return DummySubmit()">
+
+                <input type="hidden" name="GSI_ETHERNET_RESTART" value="">
+
+                                                                                <!--General-->
+
+                                                                                <table class="propertyTable">
+
+                                                                                                <tbody>
+
+                                                                                                                <tr>
+
+                                                                                                                                <td class="plainFont" colspan="2">
+
+
+
+                                                                                                                                                <table class="allNormalTable" cellspacing="0" cellpadding="0">
+
+                                                                                                                                                <tbody><tr><td width="10%">
+
+                                                                                                                                                <font class="plainFont13Bold">
+
+                                                                                                                                                                &nbsp;<img src="../../images/1_arrow.gif" border="0" align="absmiddle">&nbsp;General&nbsp;&gt;&gt;
+
+                                                                                                                                                </font>
+
+                                                                                                                                                </td>
+
+                                                                                                                                                </tr>
+
+                                                                                                                                                </tbody></table>
+
+
+
+                                                                                                                                </td>
+
+                                                                                                                </tr>
+
+                                                                                                                <tr>
+
+                                                                                                                                <td>
+
+                                                                                                                                                <table class="allNormalTable">
+
+                                                                                                                                                                <tbody>
+
+                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                <td class="headFont" width="66%">
+
+                                                                                                                                                                                                                <table class="allNormalTable" cellspacing="5" cellpadding="5">
+
+                                                                                                                                                                                                                                <tbody>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="headFont" colspan="2"><img src="../../images/2_arrow.gif" border="0" align="absmiddle">&nbsp;General </td></tr>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="plainFont">Host Name&nbsp;: </td>
+
+                                                                                                                                                                                                                                                                <td class="valueFont"><input type="text" name="GSI_PS_NAME" value="SamsungAki" size="20" maxlength="15" class="txtField"></td>
+
+                                                                                                                                                                                                                                                </tr>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="plainFont">Location&nbsp;: </td>
+
+                                                                                                                                                                                                                                                                <td class="valueFont"><input type="text" name="GSI_PS_DESC" value="Viktor's office" size="20" maxlength="50" class="txtField"></td>
+
+                                                                                                                                                                                                                                                </tr>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="plainFont">Contact&nbsp;: </td>
+
+                                                                                                                                                                                                                                                                <td class="valueFont"><input type="text" name="GSI_CONTACT" value="VikTak" size="20" maxlength="50" class="txtField"></td>
+
+                                                                                                                                                                                                                                                </tr>
+
+                                                                                                                                                                                                                                </tbody>
+
+                                                                                                                                                                                                                </table>
+
+                                                                                                                                                                                                </td>
+
+                                                                                                                                                                                </tr>
+
+                                                                                                                                                                </tbody>
+
+                                                                                                                                                </table>
+
+                                                                                                                                </td>
+
+                                                                                                                </tr>
+
+                                                                                                                <tr><td class="plainFont" align="right"><hr class="plainHR" size="1" noshade=""></td></tr>
+
+                                                                                                                <tr>
+
+                                                                                                                                <td>
+
+                                                                                                                                                <table class="allNormalTable">
+
+                                                                                                                                                                <tbody>
+
+                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                <td class="headFont" width="66%">
+
+                                                                                                                                                                                                                <table class="allNormalTable" cellspacing="5" cellpadding="5">
+
+                                                                                                                                                                                                                                <tbody>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="headFont" colspan="2"><img src="../../images/2_arrow.gif" border="0" align="absmiddle">&nbsp;Ethernet </td></tr>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                                <td class="plainFont">Speed Rate&nbsp;: </td>
+
+                                                                                                                                                                                                                                                                                <td class="valueFont">
+
+                                                                                                                                                                                                                                                                                                <select name="GSI_ETHERNET_SPEED" size="1" class="fieldWidth">
+
+                                                                                                                                                                                                                                                                                                                <option value="1" selected=""> Automatic </option>
+
+                                                                                                                                                                                                                                                                                                                <option value="2"> 10 Mbps(Half Duplex) </option>
+
+                                                                                                                                                                                                                                                                                                                <option value="4"> 10 Mbps(Full Duplex) </option>
+
+                                                                                                                                                                                                                                                                                                                <option value="8"> 100 Mbps(Half Duplex) </option>
+
+                                                                                                                                                                                                                                                                                                                <option value="16"> 100 Mbps(Full Duplex) </option>
+
+                                                                                                                                                                                                                                                                                                </select>
+
+                                                                                                                                                                                                                                                                                                </td>
+
+                                                                                                                                                                                                                                                </tr>
+
+                                                                                                                                                                                                                                                <tr>
+
+                                                                                                                                                                                                                                                                <td class="plainFont">MAC Address&nbsp;: </td>
+
+                                                                                                                                                                                                                                                                <td class="valueFont">00:15:99:85:84:A5</td>
+
+                                                                                                                                                                                                                                                </tr>
+
+                                                                                                                                                                                                                                </tbody>
+
+                                                                                                                                                                                                                </table>
+
+                                                                                                                                                                                                </td>
+
+                                                                                                                                                                                </tr>
+
+                                                                                                                                                                </tbody>
+
+                                                                                                                                                </table>
+
+                                                                                                                                </td>
+
+                                                                                                                </tr>
+
+                                                                <tr>
+
+                                                                  <td colspan="2" align="right">
+
+                                                                                <hr class="plainHR" size="1" noshade="">
+
+                                                                                <br>
+
+                                                                  </td>
+
+                                                                </tr>
+
+                                                                                                                <tr>
+
+                                                                                                                                <td colspan="2" align="center">
+
+                                                                                                                                                                <input class="butn" type="button" onclick="SubmitForm();" value="Apply">
+
+                                                                                                                                                                &nbsp;&nbsp;&nbsp;
+
+                                                                                                                                                                <input class="butn" type="button" onclick="RestoreInitialValues();" value="Undo">
+
+                                                                                                                                </td>
+
+                                                                                                                </tr>
+
+                                                                                                </tbody>
+
+                                                                                </table>
+
+
+
+                </form>
+
+                                                </td>
+
+                                                </tr>
+
+
+
+                <!--copyright start-->
+
+
+
+  <tr>
+
+    <td class="copyright">
+
+                                <div id="copyright">Copyrights © 1995-2009 SAMSUNG. All rights reserved.</div>
+
+<script>
+
+                DivLayer(parent.COPYRIGHT,'copyright');
+
+</script>
+
+                </td>
+
+  </tr>
+
+<!--copyright end-->
+
+                                </tbody>
+
+                </table>
+
+</body>

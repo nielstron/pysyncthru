@@ -7,11 +7,9 @@ from typing import Any, Dict, Optional, cast
 import aiohttp
 import demjson
 
-from .htmlparsers import HomeParser, VariableParser
+from .htmlparsers import ENDPOINT_HTML_PARSERS
 
 ENDPOINT_API = "/sws/app/information/home/home.json"
-ENDPOINT_HTML_SUPPLIES_STATUS = "/Information/supplies_status.htm"
-ENDPOINT_HTML_HOME = "/home.htm"
 
 
 class ConnectionMode(Enum):
@@ -91,26 +89,23 @@ class SyncThru:
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
 
-            home_url = "{}{}".format(self.url, ENDPOINT_HTML_HOME)
-            identity_data: Dict[str, Any] = {}
-            try:
-                async with self._session.get(home_url) as response:
-                    home_res = await response.text()
-                HomeParser(identity_data).feed(home_res)
-                VariableParser(data).feed(home_res)
-                data["identity"] = identity_data
+            any_connection_successful = False
+            for endpoint_url, parsers in ENDPOINT_HTML_PARSERS.items():
+                url = "{}{}".format(self.url, endpoint_url)
+                try:
+                    async with self._session.get(url) as response:
+                        res: str = await response.text()
+                    any_connection_successful = True
+                    for parser in parsers:
+                        parser(data).feed(res)
+                    # if successful, set device status to unknown
+                except (aiohttp.ClientError, asyncio.TimeoutError):
+                    pass
+            if (
+                any_connection_successful
+                and data["status"]["hrDeviceStatus"] == SyncthruState.OFFLINE.value
+            ):
                 data["status"]["hrDeviceStatus"] = SyncthruState.UNKNOWN.value
-            except (aiohttp.ClientError, asyncio.TimeoutError):
-                pass
-
-            supplies_url = "{}{}".format(self.url, ENDPOINT_HTML_SUPPLIES_STATUS)
-            try:
-                async with self._session.get(supplies_url) as response:
-                    supplies_res = await response.text()
-                VariableParser(data).feed(supplies_res)
-                data["status"]["hrDeviceStatus"] = SyncthruState.UNKNOWN.value
-            except (aiohttp.ClientError, asyncio.TimeoutError):
-                pass
 
         return data
 

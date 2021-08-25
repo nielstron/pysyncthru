@@ -1,6 +1,6 @@
 import re
 from html.parser import HTMLParser
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple, Type
 
 _VARIABLE_DICT = {
     "BlackTonerPer": lambda x: {"toner_black": {"opt": 1, "remaining": int(x)}},
@@ -16,11 +16,30 @@ _VARIABLES_REG = (
     )
 )
 
+ENDPOINT_HTML_SUPPLIES_STATUS = "/Information/supplies_status.htm"
+ENDPOINT_HTML_HOME = "/home.htm"
+ENDPOINT_HTML_GENERAL_PROTOCOLS = "/Settings/Protocols/general_protocols.htm"
 
-class HomeParser(HTMLParser):
-    def __init__(self, identity_data: Dict[str, Any]):
+
+class SyncThruParser(HTMLParser):
+    """
+    General class of parsers that update a syncthru state dict
+    """
+
+    def __init__(self, data: Dict[str, Any]):
         super().__init__()
-        self._data = identity_data
+        self._data = data
+
+
+class HomeParser(SyncThruParser):
+    """
+    Parser for the home.htm endpoint
+    """
+
+    def __init__(self, data: Dict[str, Any]):
+        super().__init__(data)
+        if "identity" not in data:
+            data["identity"] = {}
 
     _first_lcdFont = True
     _model_name = False
@@ -39,7 +58,7 @@ class HomeParser(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         if self._model_name:
-            self._data["model_name"] = data.strip()
+            self._data["identity"]["model_name"] = data.strip()
             self._model_name = False
         if self._name_tag:
             data = data.replace(":", "").strip().replace(" ", "_").lower()
@@ -50,16 +69,19 @@ class HomeParser(HTMLParser):
             # (which is not necessarily true)
             self._name_tag = False
         if self._value_tag:
-            self._data[self._name_key] = data.strip()
+            self._data["identity"][self._name_key] = data.strip()
             # we assume that the whole tag is read at once
             # (which is not necessarily true)
             self._value_tag = False
 
 
-class VariableParser(HTMLParser):
+class VariableParser(SyncThruParser):
+    """
+    Generic parser for variables declared in javascript
+    """
+
     def __init__(self, data: Dict[str, Any]):
-        super().__init__()
-        self._data = data
+        super().__init__(data)
 
     _inside_script = False
 
@@ -80,3 +102,46 @@ class VariableParser(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag == "script":
             self._inside_script = False
+
+
+class GeneralProtocolParser(SyncThruParser):
+    """
+    Parser for the general_protocols.htm website
+    """
+
+    def __init__(self, data: Dict[str, Any]):
+        super().__init__(data)
+        if "identity" not in data:
+            data["identity"] = {}
+
+    _name_tag = False
+    _name_key: str = ""
+    _value_tag = False
+
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Any]]) -> None:
+        if tag == "td":
+            self._name_tag = ("class", "plainFont") in attrs
+            self._value_tag = ("class", "valueFont") in attrs
+        elif tag == "input" and self._value_tag and ("type", "text") in attrs:
+            self._data[self._name_key] = dict(attrs)["value"]
+            self._value_tag = False
+
+    def handle_data(self, data: str) -> None:
+        if self._name_tag:
+            data = data.replace(":", "").strip().replace(" ", "_").lower()
+            self._name_key = data
+            # we assume that the whole tag is read at once
+            # (which is not necessarily true)
+            self._name_tag = False
+        if self._value_tag:
+            self._data[self._name_key] = data.strip()
+            # we assume that the whole tag is read at once
+            # (which is not necessarily true)
+            self._value_tag = False
+
+
+ENDPOINT_HTML_PARSERS: Dict[str, List[Type[SyncThruParser]]] = {
+    ENDPOINT_HTML_GENERAL_PROTOCOLS: [GeneralProtocolParser],
+    ENDPOINT_HTML_HOME: [HomeParser, VariableParser],
+    ENDPOINT_HTML_SUPPLIES_STATUS: [VariableParser],
+}

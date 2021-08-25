@@ -132,7 +132,7 @@ RAW_HTML = {
         "mac_addr": "00:15:99:85:84:A5",
         "ip_addr": "192.168.137.35",
     },
-    "toner_black": {"opt": 1, "remaining": 66},
+    "toner_black": {"opt": 1, "remaining": 66, "newError": ""},
     "tray1": {
         "opt": 1,
     },

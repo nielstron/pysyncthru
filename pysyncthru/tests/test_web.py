@@ -269,7 +269,7 @@ class SyncthruHTMLTest(unittest.TestCase):
     def test_toner_filter(self) -> None:
         self.assertDictEqual(
             self.syncthru.toner_status(True),
-            {"black": {"opt": 1, "remaining": 66}},
+            {"black": {"opt": 1, "remaining": 66, "newError": ""}},
         )
 
     def test_input_tray_filter(self) -> None:
@@ -278,6 +278,7 @@ class SyncthruHTMLTest(unittest.TestCase):
             {
                 "tray_1": {
                     "opt": 1,
+                    "newError": "",
                 }
             },
         )

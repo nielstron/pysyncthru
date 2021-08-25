@@ -3,11 +3,19 @@ from html.parser import HTMLParser
 from typing import Any, Callable, Dict, List, Tuple, Type
 
 _VARIABLE_DICT = {
-    "BlackTonerPer": lambda x: {"toner_black": {"opt": 1, "remaining": int(x)}},
-    "tray1Status": lambda x: {"tray1": {"opt": 1}},
-    "tray2Installed": lambda x: {"tray2": {"opt": 1 if x == "Installed" else 0}},
-    "tray3Installed": lambda x: {"tray3": {"opt": 1 if x == "Installed" else 0}},
-    "tray4Installed": lambda x: {"tray4": {"opt": 1 if x == "Installed" else 0}},
+    "BlackTonerPer": lambda x: {
+        "toner_black": {"opt": 1, "remaining": int(x), "newError": ""}
+    },
+    "tray1Status": lambda x: {"tray1": {"opt": 1, "newError": ""}},
+    "tray2Installed": lambda x: {
+        "tray2": {"opt": 1 if x == "Installed" else 0, "newError": ""}
+    },
+    "tray3Installed": lambda x: {
+        "tray3": {"opt": 1 if x == "Installed" else 0, "newError": ""}
+    },
+    "tray4Installed": lambda x: {
+        "tray4": {"opt": 1 if x == "Installed" else 0, "newError": ""}
+    },
 }  # type: Dict[str, Callable[[str], Dict[str, Any]]]
 _KNOWN_VARIABLES = "|".join(_VARIABLE_DICT.keys())
 _VARIABLES_REG = (

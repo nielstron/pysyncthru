@@ -12,7 +12,7 @@ import time
 # For the tests
 import aiohttp
 import asyncio
-from pysyncthru import SyncThru, SyncthruState, ConnectionMode
+from pysyncthru import SyncThru, SyncthruState, ConnectionMode, SyncThruAPINotSupported
 from .web_raw.web_state import RAW, RAW_HTML
 
 ADDRESS = "localhost"
@@ -334,7 +334,7 @@ class NonSyncthruWebTest(unittest.TestCase):
             self.fail(
                 "No error thrown when noticing that the host does not support Syncthru"
             )
-        except ValueError:
+        except SyncThruAPINotSupported:
             pass
 
     def test_offline_unknown(self) -> None:

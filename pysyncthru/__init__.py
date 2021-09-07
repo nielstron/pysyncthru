@@ -37,6 +37,10 @@ def construct_url(ip_address: str) -> str:
     return ip_address
 
 
+class SyncThruAPINotSupported(Exception):
+    """Error raised when a printer does not provide access to a JSON based API."""
+
+
 class SyncThru:
     """Interface to communicate with the Samsung Printer with SyncThru."""
 
@@ -84,8 +88,12 @@ class SyncThru:
             except (aiohttp.ClientError, asyncio.TimeoutError):
                 pass
             except demjson.JSONDecodeError:
+                # If no JSON data is provided but we want to only connect
+                # in this mode, raise an Exception
                 if self.connection_mode != ConnectionMode.AUTO:
-                    raise ValueError("Invalid host, does not support SyncThru.")
+                    raise SyncThruAPINotSupported(
+                        "Invalid host, does not support SyncThru JSON API."
+                    )
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
 

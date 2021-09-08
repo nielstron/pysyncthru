@@ -16,7 +16,7 @@ short_description = "{}".format(
 
 setup(
     name="PySyncThru",
-    version="0.7.9",
+    version="0.7.10",
     description=short_description,
     author="nielstron",
     author_email="n.muendler@web.de",
@@ -28,7 +28,7 @@ setup(
         ],
     },
     install_requires=[
-        "demjson",
+        "demjson3",
         "aiohttp",
     ],
     long_description=long_description,

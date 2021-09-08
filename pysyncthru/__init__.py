@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Any, Dict, Optional, cast
 
 import aiohttp
-import demjson
+import demjson3
 
 from .htmlparsers import ENDPOINT_HTML_PARSERS
 
@@ -79,7 +79,7 @@ class SyncThru:
 
             try:
                 async with self._session.get(url) as response:
-                    res = demjson.decode(
+                    res = demjson3.decode(
                         await response.text(), strict=False
                     )  # type: Dict[str, Any]
                     # if we get something back from this endpoint,
@@ -87,7 +87,7 @@ class SyncThru:
                     return res
             except (aiohttp.ClientError, asyncio.TimeoutError):
                 pass
-            except demjson.JSONDecodeError:
+            except demjson3.JSONDecodeError:
                 # If no JSON data is provided but we want to only connect
                 # in this mode, raise an Exception
                 if self.connection_mode != ConnectionMode.AUTO:

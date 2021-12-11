@@ -23,8 +23,9 @@ async def main(ip: str) -> None:
         if printer.is_online():
             # Show details about the printer
             print("Printer model:", printer.model())
-            # Get the details of a cartridge
-            print("Toner Cyan details:", printer.toner_status()["cyan"])
+            # Get the details of cartridges
+            for color, details in printer.toner_status().items():
+                print(f"Toner {color} details:", details)
             # Get the details about a tray
             print("Tray 1 Capacity:", printer.input_tray_status()["tray_1"]["capa"])
         # Print all available details from the printer

@@ -4,17 +4,16 @@ Copyright (c) 2017-2018 Fabian Affolter <fabian@affolter-engineering.ch>
 Licensed under MIT. All rights reserved.
 """
 import asyncio
+import sys
 
 import aiohttp
 
 from pysyncthru import SyncThru
 
-IP_PRINTER = "192.168.0.25"
 
-
-async def main() -> None:
+async def main(ip: str) -> None:
     async with aiohttp.ClientSession() as session:
-        printer = SyncThru(IP_PRINTER, session)
+        printer = SyncThru(ip, session)
         await printer.update()
 
         # Is printer online?
@@ -31,6 +30,9 @@ async def main() -> None:
         # Print all available details from the printer
         print("All data:\n", printer.raw())
 
+if len(sys.argv) != 2:
+    print(f"Usage: {__file__} IP-ADDRESS", file=sys.stderr)
+    sys.exit(1)
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+loop.run_until_complete(main(sys.argv[1]))

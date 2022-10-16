@@ -17,6 +17,7 @@ dist: xenial
 os: linux
 
 install:
+- if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then pip install -U importlib_metadata; fi
 - pip install coverage coveralls
 - test ! "$PRE_COMMIT" || pip install pre-commit
 - pip install "mypy>=0.782"

@@ -1,5 +1,5 @@
 # PySyncThru - a very basic python SyncThru bridge
-[![Build Status](https://travis-ci.com/nielstron/pysyncthru.svg?branch=master)](https://travis-ci.com/nielstron/pysyncthru)
+[![Build Status](https://app.travis-ci.com/nielstron/pysyncthru.svg?branch=master)](https://app.travis-ci.com/github/nielstron/pysyncthru)
 [![Coverage Status](https://coveralls.io/repos/github/nielstron/pysyncthru/badge.svg?branch=master)](https://coveralls.io/github/nielstron/pysyncthru?branch=master)
 [![Package Version](https://img.shields.io/pypi/v/pysyncthru)](https://pypi.org/project/PySyncThru/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pysyncthru.svg)](https://pypi.org/project/PySyncThru/)

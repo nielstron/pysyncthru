@@ -29,9 +29,11 @@ async def main(ip: str) -> None:
                 print(f"Toner {color} details:", details)
             # Get the details about a tray
             print("Tray 1 Capacity:", printer.input_tray_status()["tray_1"]["capa"])
+            print ('Get counter data.')
+            print (f'Print : {printer.print_count()}, Copies: {printer.copy_count()}')
         # Print all available details from the printer
         print("All data:\n", pprint.pformat(printer.raw()))
-
+        print("All counter data:\n", pprint.pformat(printer.raw_counter()))
 
 if len(sys.argv) != 2:
     print(f"Usage: {__file__} IP-ADDRESS", file=sys.stderr)

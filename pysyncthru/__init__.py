@@ -82,7 +82,7 @@ class SyncThru:
         Retrieve the data from the printer.
         Throws ValueError if host does not support SyncThru
         """
-<<<<<<< HEAD
+
         data = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
             url = "{}{}".format(self.url, ENDPOINT_API)
@@ -130,12 +130,11 @@ class SyncThru:
             any_connection_successful = False
             for endpoint_url, parsers in ENDPOINT_HTML_PARSERS.items():
                 html_url = "{}{}".format(self.url, endpoint_url)
-=======
+
         if datatype == DataType.PRINTER.value:
             data = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
             if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
                 url = f'{self.url}{ENDPOINT_API}{PRINTER_ENDPOINT}'
->>>>>>> 963735d (Add counter for print & copy)
                 try:
                     async with self._session.get(url) as response:
                         res = demjson3.decode(

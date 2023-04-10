@@ -28,9 +28,11 @@ async def main() -> None:
             print("Toner Cyan details:", printer.toner_status()["cyan"])
             # Get the details about a tray
             print("Tray 1 Capacity:", printer.input_tray_status()["tray_1"]["capa"])
+            print ('Get counter data.')
+            print (f'Print : {printer.print_count()}, Copies: {printer.copy_count()}')
         # Print all available details from the printer
         print("All data:\n", printer.raw())
-
+        print("All counter data:\n", printer.raw_counter())
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())

@@ -73,16 +73,16 @@ class SyncThru:
         Retrieve the data from the printer and caches is in the class
         Throws ValueError if host does not support SyncThru
         """
-        self.data_printer_status = await self._current_data(DataType.PRINTER.value)
-        self.data_counter_status = await self._current_data(DataType.COUNTER.value)
+        self.data_printer_status = await self._current_data(DataType.PRINTER)
+        self.data_counter_status = await self._current_data(DataType.COUNTER)
 
 
-    async def _current_data(self, datatype: DataType) -> Dict[str, Any]:
+    async def _current_data(self, datatype: Any) -> Dict[str, Any]:
         """
         Retrieve the data from the printer.
         Throws ValueError if host does not support SyncThru
         """
-        if datatype == DataType.PRINTER.value:
+        if datatype is DataType.PRINTER:
             data = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
             if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
                 url = f'{self.url}{ENDPOINT_API}{PRINTER_ENDPOINT}'
@@ -123,18 +123,18 @@ class SyncThru:
                     and data["status"]["hrDeviceStatus"] == SyncthruState.OFFLINE.value
                 ):
                     data["status"]["hrDeviceStatus"] = SyncthruState.UNKNOWN.value
-        elif datatype == DataType.COUNTER.value:
+        elif datatype is DataType.COUNTER:
             if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:
                 url = f'{self.url}{ENDPOINT_API}{COUNTER_ENDPOINT}'
                 print (f'In counter section with url {url}')
                 try:
                     async with self._session.get(url) as response:
-                        res = demjson3.decode(
+                        res_count = demjson3.decode(
                             await response.text(), strict=False
                         )  # type: Dict[str, Any]
                         # if we get something back from this endpoint,
                         # we directly return it
-                        return res
+                        return res_count
                 except (aiohttp.ClientError, asyncio.TimeoutError):
                     pass
                 except demjson3.JSONDecodeError:
@@ -293,10 +293,10 @@ class SyncThru:
                 drum_status[color] = {}
         return drum_status
 
-    def print_count(self) -> Dict [str, Any]:
+    def print_count(self) -> Optional[str]:
         """Return number of prints"""
         return self.data_counter_status.get("GXI_BILLING_PRINT_TOTAL_IMP_CNT")
 
-    def copy_count(self) -> Dict [str, Any]:
+    def copy_count(self) -> Optional[str]:
         """Return number of copies"""
         return self.data_counter_status.get("GXI_BILLING_COPY_TOTAL_IMP_CNT")

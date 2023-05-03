@@ -79,21 +79,55 @@ class SyncThru:
 
             try:
                 async with self._session.get(url) as response:
-                    res = demjson3.decode(
-                        await response.text(), strict=False
-                    )  # type: Dict[str, Any]
-                    # if we get something back from this endpoint,
-                    # we directly return it
-                    return res
+                    json_data = await response.text()
+                    print(json_data)
+                
             except (aiohttp.ClientError, asyncio.TimeoutError):
-                pass
-            except demjson3.JSONDecodeError:
-                # If no JSON data is provided but we want to only connect
-                # in this mode, raise an Exception
-                if self.connection_mode != ConnectionMode.AUTO:
-                    raise SyncThruAPINotSupported(
-                        "Invalid host, does not support SyncThru JSON API."
+                json_data = ''
+
+            try:
+                res = demjson3.decode(
+                        json_data, strict=False
                     )
+                # JSON parsed OK so return it
+                return res
+            except demjson3.JSONDecodeError as ex:
+                if 'Line terminator characters must be escaped inside string literals' in str(ex):
+                    # we can fix this and then try again
+
+                    # go through the raw JSON data and escape all \r and \n inside string
+                    # literals
+                    new_json_data = ''
+                    inside_literal = False
+                    for c in json_data:
+                        if c == "\"":
+                            inside_literal = not inside_literal
+                        if c in ['\r', '\n'] and inside_literal:
+                            new_json_data += '\\'
+                        new_json_data += c
+
+                    try:
+                        res = demjson3.decode(
+                                new_json_data, strict=False
+                            )
+                        # JSON parsed OK so return it
+                        return res
+                    except demjson3.JSONDecodeError as ex:
+                        # If no JSON data is provided but we want to only connect
+                        # in this mode, raise an Exception
+                        if self.connection_mode != ConnectionMode.AUTO:
+                            raise SyncThruAPINotSupported(
+                                "Invalid host, does not support SyncThru JSON API."
+                            )
+
+                else:
+                    # something else happened, no idea how to fix
+                    # If no JSON data is provided but we want to only connect
+                    # in this mode, raise an Exception
+                    if self.connection_mode != ConnectionMode.AUTO:
+                        raise SyncThruAPINotSupported(
+                            "Invalid host, does not support SyncThru JSON API."
+                        )
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
 

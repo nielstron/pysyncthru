@@ -80,7 +80,6 @@ class SyncThru:
             try:
                 async with self._session.get(url) as response:
                     json_data = await response.text()
-                    print(json_data)
                 
             except (aiohttp.ClientError, asyncio.TimeoutError):
                 json_data = ''

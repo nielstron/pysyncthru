@@ -42,7 +42,7 @@ deploy:
   - provider: pypi
     on:
       branch: master
-      python: '3.8'
+      python: '3.10'
     skip_existing: true
     username: nielstron
     password:
@@ -52,7 +52,7 @@ deploy:
     overwrite: false
     on:
       branch: master
-      python: '3.8'
+      python: '3.10'
       condition: "$TRAVIS_EVENT_TYPE = push"
     token:
       secure: UCdkdIOHZjSU/H6jLxEyiobJ4D44PnfSZE96qMaci1f8oVmYlq1Y9b+tfqD92ZeuMD9YwcOu5T106IKEtxJu8WUii1H8cDHN7ul1fvUvQan5b6o90Df+vLh3c3coj38lwDw4kxP5LsOCERMZ4OA5kM5sh11YiVhyYNyOYlBChFUeEUMRQkR3uu7pgGPEu7cZx7duRdr/3G3i0HKQUyHN3HRuqWQhQvhHgdrvUhEupc7KGsrn7KfQx/zPrCHZJZ1/wRvmGG/Yo8W0ZHXemWbubwI83Ho0VMdDKH2Nj+uNv+bZwGImGbhrG+SB7RwpynG8whKQCc5Mphr5r6LzOi6JbAMxJeIH/J/JsyZwe65EDcjPBKMuyrv6NDrmPiPmceLAN7idqEdw5J5NMcw9yhdMTxJNsUgSnSsHhaMW78R23MM/76jU3cew6D9d21h8aw1trcoOcJ0/h0q43OuSZ/uH045U4wMWD2mqEP94qdUg9vpkiw2dJ9FHs0F3kjfAze/m8VUQbhXxkXKvFBv/dcy/g6iG9lBYcXSOV+TFScuajTVRODDohN02OsQIqFt/5tUxDLmRzeJAPvOW7E7dxoeRfOj6l/6DIZ4SUY9vdXPYEqxbN27JE2nTPE6M6fGNRm6YfBRWL/ij0Zs5U+Ww6uS6c9rsXelXcZMqCFodwVbKlhE=

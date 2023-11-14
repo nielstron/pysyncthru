@@ -79,21 +79,42 @@ class SyncThru:
 
             try:
                 async with self._session.get(url) as response:
-                    res = demjson3.decode(
-                        await response.text(), strict=False
-                    )  # type: Dict[str, Any]
+                    res_raw = await response.text()
+            except (aiohttp.ClientError, asyncio.TimeoutError):
+                res_raw = None
+            if res_raw is not None:
+                try:
                     # if we get something back from this endpoint,
                     # we directly return it
+                    res: Dict[str, Any] = demjson3.decode(res_raw)
                     return res
-            except (aiohttp.ClientError, asyncio.TimeoutError):
-                pass
-            except demjson3.JSONDecodeError:
-                # If no JSON data is provided but we want to only connect
-                # in this mode, raise an Exception
-                if self.connection_mode != ConnectionMode.AUTO:
-                    raise SyncThruAPINotSupported(
-                        "Invalid host, does not support SyncThru JSON API."
-                    )
+                except demjson3.JSONDecodeError as e:
+                    # provided by @metalblue
+                    if (
+                        "Line terminator characters must be escaped inside string literals"
+                        in str(e)
+                    ):
+                        # we can fix this and then try again
+                        # go through the raw JSON data and escape all \r and \n inside string literals
+                        new_res_raw = ""
+                        inside_literal = False
+                        for c in res_raw:
+                            if c == '"':
+                                inside_literal = not inside_literal
+                            if c in ("\r", "\n") and inside_literal:
+                                new_res_raw += "\\"
+                            new_res_raw += c
+                        try:
+                            res_2: Dict[str, Any] = demjson3.decode(new_res_raw)
+                            return res_2
+                        except demjson3.JSONDecodeError:
+                            pass
+                    # If no JSON data is provided but we want to only connect
+                    # in this mode, raise an Exception
+                    if self.connection_mode != ConnectionMode.AUTO:
+                        raise SyncThruAPINotSupported(
+                            "Invalid host, does not support SyncThru JSON API."
+                        )
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
             any_connection_successful = False

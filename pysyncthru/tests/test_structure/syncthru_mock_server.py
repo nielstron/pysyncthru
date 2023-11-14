@@ -6,12 +6,13 @@ import posixpath
 from pathlib import Path
 from typing import Optional, Tuple
 
-SERVER_DIR = Path(__file__).parent or Path(".")
+SERVER_DIR = (Path(__file__).parent or Path(".")) / "state1"
 
 
 class SyncThruServer(HTTPServer):
 
     blocked = False
+    server_dir = SERVER_DIR
 
     def set_blocked(self) -> None:
         self.blocked = True
@@ -53,7 +54,7 @@ class SyncThruRequestHandler(SimpleHTTPRequestHandler):
             path = urllib.parse.unquote(path)
         path = posixpath.normpath(path)
         words = filter(None, path.split("/"))
-        path = str(SERVER_DIR.absolute())
+        path = str(self.server.server_dir.absolute())
         for word in words:
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
                 # Ignore components that are not a simple file/directory name
@@ -89,7 +90,7 @@ class SyncThruRequestHandler(SimpleHTTPRequestHandler):
             # HTML encode to prevent Cross Site Scripting attacks
             # (see bug #1100201)
             # Specialized error method for fronius
-            with SERVER_DIR.joinpath(".error.html").open("rb") as file:
+            with self.server.server_dir.joinpath(".error.html").open("rb") as file:
                 body = file.read()
             self.send_header("Content-Type", self.error_content_type)
             self.send_header("Content-Length", str(len(body)))

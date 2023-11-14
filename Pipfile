@@ -11,4 +11,4 @@ pre-commit = "*"
 mypy = ">=0.782"
 
 [requires]
-python_version = "3.8"
+python_version = "3.10"

@@ -96,7 +96,6 @@ class SyncThru:
                     )
 
         if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.HTML]:
-
             any_connection_successful = False
             for endpoint_url, parsers in ENDPOINT_HTML_PARSERS.items():
                 html_url = "{}{}".format(self.url, endpoint_url)
@@ -181,7 +180,8 @@ class SyncThru:
     def capability(self) -> Dict[str, Any]:
         """Return the capabilities of the printer."""
         try:
-            return self.data.get("capability", {})  # type: ignore
+            data: Dict[str, Any] = self.data.get("capability", {})
+            return data
         except (KeyError, AttributeError):
             return {}
 

@@ -1,8 +1,5 @@
 [flake8]
 show-source = True
-ignore = E123, E125
+ignore = E123, E125, E203, W503
 max-line-length = 88
-extend-ignore = E203, W503
-exclude =
-    .tox,.git,
-    scripts/test_import.py
+exclude = .tox,.git,scripts/test_import.py

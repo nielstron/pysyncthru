@@ -15,7 +15,7 @@ jobs:
     env: PRE_COMMIT=1
   fast_finish: true
 
-dist: xenial
+dist: bionic
 os: linux
 
 install:

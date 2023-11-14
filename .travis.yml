@@ -1,10 +1,8 @@
 language: python
-
 cache:
   pip: true
   directories:
   - "$HOME/.cache/pre-commit"
-
 jobs:
   include:
   - python: '3.7'
@@ -13,40 +11,35 @@ jobs:
   - python: '3.10'
     env: PRE_COMMIT=1
   fast_finish: true
-
 dist: bionic
 os: linux
-
 install:
-- if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then pip install -U importlib_metadata; fi
+- if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then pip install -U importlib_metadata;
+  fi
 - pip install coverage coveralls
 - test ! "$PRE_COMMIT" || pip install pre-commit
 - pip install "mypy>=0.782"
 - pip install -e .
-
 script:
 - test ! "$PRE_COMMIT" || pre-commit run --all-files
 - mypy --python-version $TRAVIS_PYTHON_VERSION pysyncthru
 - coverage run --source=pysyncthru setup.py test
-
 after_success:
 - coverage report
 - coveralls
-
 before_deploy:
 - git config --local user.name "nielstron"
 - export TRAVIS_TAG=release-$(cat setup.py | grep version= | cut -d "\"" -f 2)
 - git tag $TRAVIS_TAG || echo "Tag already exists"
-
 deploy:
   - provider: pypi
     on:
       branch: master
       python: '3.10'
     skip_existing: true
-    username: nielstron
+    username: __token__
     password:
-      secure: yh4UURTCp8JJ14AQ5bGeT9/IrddUEbIQD0ST+MgIG3IH2ii49Gss947TiYDkMcWd7tWFobrqVsDP8r6kwo9x7M/FDHqnFarclCD6PRzi3PYN8OUeRJpKpAXYYbqbRtUHxtS2lkK3mzyYyvr3eCT7TDLTyDO75bpyRifjKLsfARbT0CU9DBbLed305UgBnEUrwZH9dy7zYkCT+sto0F4LfdNhpbJAmT4IPRtngCgg9BEcdKxJaBZYOxQ4bsamDsu+8Ocwqe87GCnhnOIkxKqJ9ptkLKnOukvUwbCxlUZCZE39w31uzrW2Ml1/xXmjMxmSAstKjptdhSAFUeFG92pRufKUWZZI7DQK6NOfgP3HUz5pjwKJqn7hMREVl7Qa/IxPgEbDQ5HChmKrRMhRpfTHM9WfhiXy5Y9Yxcx2YH00dJYElw3LuEhXP+IhScBVtkZGmX8XxoVLYoxwm1/JL873zdsShv9ZCSgoe0cLFE7wAPlTdV2q9IQXd87YkaWuZtz6iOsKST+wKf2ergCuxCfXwEEQE9z7dswyfzLnPBxGVBXliv0M8avtRVOoiYFr21OAyJCMw4VMFfjWR0vJjzPiRh7tPMftWP9RGCvpqDmtZGLP6jhWIXGDDAyryj49L9lND8CgTJJv20nLftNrs2y3EEgLfYeicQXS5C0qzzzsPVI=
+      secure: fd8zSXq/kdNFLoYrfbc4FSIjBMULrlvEIsp0m9miAjconugsnOsigs6q5nJ676105qMkhQCs0fsp24zE4RpW6pabAO433eGZE5i3CbiOqzUTSy6xguTLM+Jk7mLBW1W6V2SmZa9cs1Zilg5PjIsErPBHo4xQudcBS9j8wbPrtivPd3sqEzsPVaBFp0o+3fogJjl9wD4KdhB1382Lg3s9TybUJ2/k9SrB+5dxMp/IyqeuBupnPHscCP5CnNfsu3IcjVLES053Hm+/5sAXSXiKDfe6ZH9Zzx845HelTvuXXNXbJjJx0eJS02bTe8i2uaBNmCCfpNOKoNm2BC9IaJ2Ku0rGnwUz8hgS7iHrRMHeEpSczFnltRaUwheH4Su9SVAiVyOsVmlAHnKk7tpWoi42Tzj6ImKUMWXrwaypDAALQM5uSu948AcpaTXZwOsGQPjPdnlw+vjraXXzqo4Qrh52QsZ6we5CLWesdVyd1hlfUuD0rwmfqmF9/KtBgfCYR3A78kG2e94rhUrvC0Ybho94k+2uISTfhbAktH+uFjV7gGhT1e+fHrEOXQ3SfY7zA25QkqjO31n8Ze242sYgXdJtu6cdupSkkLAXlXl/+mAuTQiRCWNOizE6O7Nyx8zNdVj7LtC6EsmABdrGYxN8wQ2Mvtr9VF6Ksp2OnqBbnTfVs/Y=
   - provider: releases
     cleanup: true
     overwrite: false

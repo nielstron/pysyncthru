@@ -13,7 +13,7 @@ import time
 import aiohttp
 import asyncio
 from pysyncthru import SyncThru, SyncthruState, ConnectionMode, SyncThruAPINotSupported
-from .web_raw.web_state import RAW, RAW_HTML
+from .web_raw.web_state import RAW_STATE1, RAW_HTML
 
 ADDRESS = "localhost"
 
@@ -70,7 +70,7 @@ class SyncthruAPITest(unittest.TestCase):
         self.assertEqual(self.syncthru.device_status_details(), "Sleeping...")
 
     def test_model(self) -> None:
-        self.assertEqual(self.syncthru.model(), RAW["identity"]["model_name"])
+        self.assertEqual(self.syncthru.model(), RAW_STATE1["identity"]["model_name"])
 
     def test_toner_filter(self) -> None:
         self.assertDictEqual(
@@ -197,16 +197,16 @@ class SyncthruAPITest(unittest.TestCase):
         )
 
     def test_location(self) -> None:
-        self.assertEqual(self.syncthru.location(), RAW["identity"]["location"])
+        self.assertEqual(self.syncthru.location(), RAW_STATE1["identity"]["location"])
 
     def test_serial_number(self) -> None:
-        self.assertEqual(self.syncthru.serial_number(), RAW["identity"]["serial_num"])
+        self.assertEqual(self.syncthru.serial_number(), RAW_STATE1["identity"]["serial_num"])
 
     def test_hostname(self) -> None:
-        self.assertEqual(self.syncthru.hostname(), RAW["identity"]["host_name"])
+        self.assertEqual(self.syncthru.hostname(), RAW_STATE1["identity"]["host_name"])
 
     def test_cap(self) -> None:
-        self.assertEqual(self.syncthru.capability(), RAW["capability"])
+        self.assertEqual(self.syncthru.capability(), RAW_STATE1["capability"])
 
     def tearDown(self) -> None:
         self.server_control.stop_server()

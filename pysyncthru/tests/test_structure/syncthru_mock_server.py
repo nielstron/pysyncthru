@@ -4,7 +4,8 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import posixpath
 from pathlib import Path
-from typing import Optional, Tuple
+from socket import socket
+from typing import Optional, Tuple, Union
 
 SERVER_DIR = (Path(__file__).parent or Path(".")) / "state1"
 
@@ -23,7 +24,10 @@ class SyncThruServer(HTTPServer):
 
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
     def __init__(
-        self, request: bytes, client_address: Tuple[str, int], server: SyncThruServer
+        self,
+        request: Union[socket, tuple[bytes, socket]],
+        client_address: Tuple[str, int],
+        server: SyncThruServer,
     ) -> None:
         self.server = server  # type: SyncThruServer
         super().__init__(request, client_address, server)

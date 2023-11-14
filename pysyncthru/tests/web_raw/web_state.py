@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-RAW = {
+RAW_STATE1 = {
     "status": {
         "hrDeviceStatus": 2,
         "status1": "  Sleeping...   ",

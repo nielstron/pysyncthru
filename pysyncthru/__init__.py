@@ -181,7 +181,7 @@ class SyncThru:
     def capability(self) -> Dict[str, Any]:
         """Return the capabilities of the printer."""
         try:
-            return self.data.get("capability", {})
+            return self.data.get("capability", {})  # type: ignore
         except (KeyError, AttributeError):
             return {}
 

@@ -19,7 +19,6 @@ ADDRESS = "localhost"
 
 
 class SyncthruAPITest(unittest.TestCase):
-
     server = None
     server_control = None  # type: Server
     port = 0
@@ -200,7 +199,9 @@ class SyncthruAPITest(unittest.TestCase):
         self.assertEqual(self.syncthru.location(), RAW_STATE1["identity"]["location"])
 
     def test_serial_number(self) -> None:
-        self.assertEqual(self.syncthru.serial_number(), RAW_STATE1["identity"]["serial_num"])
+        self.assertEqual(
+            self.syncthru.serial_number(), RAW_STATE1["identity"]["serial_num"]
+        )
 
     def test_hostname(self) -> None:
         self.assertEqual(self.syncthru.hostname(), RAW_STATE1["identity"]["host_name"])
@@ -213,7 +214,6 @@ class SyncthruAPITest(unittest.TestCase):
 
 
 class SyncthruHTMLTest(unittest.TestCase):
-
     server = None
     server_control = None  # type: Server
     port = 0
@@ -285,7 +285,6 @@ class SyncthruHTMLTest(unittest.TestCase):
 
 
 class NonSyncthruWebTest(unittest.TestCase):
-
     server = None
     server_control = None  # type: Server
     port = 0

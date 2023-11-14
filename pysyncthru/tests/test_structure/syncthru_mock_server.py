@@ -11,7 +11,6 @@ SERVER_DIR = (Path(__file__).parent or Path(".")) / "state1"
 
 
 class SyncThruServer(HTTPServer):
-
     blocked = False
     server_dir = SERVER_DIR
 

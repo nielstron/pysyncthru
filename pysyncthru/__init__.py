@@ -84,9 +84,9 @@ class SyncThru:
                 res_raw = None
             if res_raw is not None:
                 try:
-                    res = demjson3.decode(res_raw)  # type: Dict[str, Any]
                     # if we get something back from this endpoint,
                     # we directly return it
+                    res: Dict[str, Any] = demjson3.decode(res_raw)
                     return res
                 except demjson3.JSONDecodeError as e:
                     # provided by @metalblue
@@ -105,8 +105,8 @@ class SyncThru:
                                 new_res_raw += "\\"
                             new_res_raw += c
                         try:
-                            res = demjson3.decode(new_res_raw)  # type: Dict[str, Any]
-                            return res
+                            res_2: Dict[str, Any] = demjson3.decode(new_res_raw)
+                            return res_2
                         except demjson3.JSONDecodeError:
                             pass
                     # If no JSON data is provided but we want to only connect

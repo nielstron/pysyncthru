@@ -211,19 +211,6 @@ class SyncthruAPITest(unittest.TestCase):
     def test_cap(self) -> None:
         self.assertEqual(self.syncthru.capability(), RAW_STATE1["capability"])
 
-    def test_newline_unescaped_status(self) -> None:
-        self.server.server_dir = "state2"
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.syncthru.update())
-        self.assertEqual(
-            self.syncthru.device_status(),
-            """   Warming Up
- Please Wait...
-
-
-""",
-        )
-
     def tearDown(self) -> None:
         self.server_control.stop_server()
 

@@ -3,6 +3,8 @@
 
 # general requirements
 import unittest
+from pathlib import Path
+
 from .test_structure.server_control import Server
 from .test_structure.syncthru_mock_server import SyncThruServer, SyncThruRequestHandler
 
@@ -208,6 +210,71 @@ class SyncthruAPITest(unittest.TestCase):
 
     def test_cap(self) -> None:
         self.assertEqual(self.syncthru.capability(), RAW_STATE1["capability"])
+
+    def test_newline_unescaped_status(self) -> None:
+        self.server.server_dir = "state2"
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.syncthru.update())
+        self.assertEqual(
+            self.syncthru.device_status(),
+            """   Warming Up
+ Please Wait...
+
+
+""",
+        )
+
+    def tearDown(self) -> None:
+        self.server_control.stop_server()
+
+
+class SyncthruAPITest2(unittest.TestCase):
+    server = None
+    server_control = None  # type: Server
+    port = 0
+    url = "http://localhost:80"
+    syncthru = None  # type: SyncThru
+
+    def setUp(self) -> None:
+        # Create an arbitrary subclass of TCP Server as the server to be started
+        # Here, it is an Simple HTTP file serving server
+        handler = SyncThruRequestHandler
+
+        max_retries = 10
+        r = 0
+        while not self.server:
+            try:
+                # Connect to any open port
+                self.server = SyncThruServer((ADDRESS, 0), handler)
+            except OSError:
+                if r < max_retries:
+                    r += 1
+                else:
+                    raise
+                time.sleep(1)
+
+        self.server_control = Server(self.server)
+        self.port = self.server_control.get_port()
+        self.url = "{}:{}".format(ADDRESS, self.port)
+        # Start test server before running any tests
+        self.server_control.start_server()
+        self.server.server_dir = Path(__file__).parent / "test_structure" / "state2"
+
+        async def fetch():
+            async with aiohttp.ClientSession() as session:
+                self.syncthru = SyncThru(
+                    self.url, session, connection_mode=ConnectionMode.API
+                )
+                await self.syncthru.update()
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(fetch())
+
+    def test_newline_unescaped_status(self) -> None:
+        self.assertEqual(
+            self.syncthru.device_status_details(),
+            "Warming Up\r\n Please Wait...",
+        )
 
     def tearDown(self) -> None:
         self.server_control.stop_server()

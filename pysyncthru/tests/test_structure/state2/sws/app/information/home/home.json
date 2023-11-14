@@ -20,7 +20,7 @@
 		ipv6_link_addr : "",
 		mac_addr: "xx:xx:xx:xx:xx:xx",
 		admin_email: "mail@example.com",
-		admin_name: "Admin
+		admin_name: "Admin",
 		admin_phone: "",
 		customer_support: ""
 	},

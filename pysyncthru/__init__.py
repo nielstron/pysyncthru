@@ -101,7 +101,7 @@ class SyncThru:
                         for c in res_raw:
                             if c == '"':
                                 inside_literal = not inside_literal
-                            if c in ["\r", "\n"] and inside_literal:
+                            if c in ("\r", "\n") and inside_literal:
                                 new_res_raw += "\\"
                             new_res_raw += c
                         try:

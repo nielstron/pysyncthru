@@ -32,6 +32,7 @@ async def main(ip: str) -> None:
         # Print all available details from the printer
         print("All data:\n", pprint.pformat(printer.raw()))
 
+
 if len(sys.argv) != 2:
     print(f"Usage: {__file__} IP-ADDRESS", file=sys.stderr)
     sys.exit(1)

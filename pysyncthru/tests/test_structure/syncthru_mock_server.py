@@ -25,7 +25,7 @@ class SyncThruServer(HTTPServer):
 class SyncThruRequestHandler(SimpleHTTPRequestHandler):
     def __init__(
         self,
-        request: Union[socket, tuple[bytes, socket]],
+        request: Union[socket, Tuple[bytes, socket]],
         client_address: Tuple[str, int],
         server: SyncThruServer,
     ) -> None:

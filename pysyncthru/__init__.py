@@ -136,7 +136,6 @@ class SyncThru:
             for endpoint_url, parsers in ENDPOINT_HTML_PARSERS.items():
                 html_url = "{}{}".format(self.url, endpoint_url)
 
-        if datatype == DataType.PRINTER.value:
         if datatype is DataType.PRINTER:
             data = {"status": {"hrDeviceStatus": SyncthruState.OFFLINE.value}}
             if self.connection_mode in [ConnectionMode.AUTO, ConnectionMode.API]:

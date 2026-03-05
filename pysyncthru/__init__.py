@@ -74,7 +74,8 @@ class SyncThru:
     async def _get_text(self, url: str) -> Optional[str]:
         try:
             async with self._session.get(url) as response:
-                return await response.text()
+                text: str = await response.text()
+                return text
         except (aiohttp.ClientError, asyncio.TimeoutError):
             return None
 
@@ -83,8 +84,7 @@ class SyncThru:
             return cast(Dict[str, Any], demjson3.decode(res_raw))
         except demjson3.JSONDecodeError as e:
             error_msg = (
-                "Line terminator characters must be escaped "
-                "inside string literals"
+                "Line terminator characters must be escaped inside string literals"
             )
             if error_msg in str(e):
                 # Escape \r and \n inside string literals in the raw payload.
@@ -167,9 +167,9 @@ class SyncThru:
 
     def _identity_data(self, key: str) -> Optional[str]:
         try:
-            return cast(Dict[str, str], self.data_printer_status.get("identity", {})).get(
-                key
-            )
+            return cast(
+                Dict[str, str], self.data_printer_status.get("identity", {})
+            ).get(key)
         except (KeyError, AttributeError):
             return None
 
@@ -240,7 +240,9 @@ class SyncThru:
         toner_status = {}
         for color in self.COLOR_NAMES:
             try:
-                toner_stat = self.data_printer_status.get(f"{SyncThru.TONER}_{color}", {})
+                toner_stat = self.data_printer_status.get(
+                    f"{SyncThru.TONER}_{color}", {}
+                )
                 if filter_supported and toner_stat.get("opt", 0) == 0:
                     continue
                 else:

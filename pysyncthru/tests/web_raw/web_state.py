@@ -147,7 +147,7 @@ RAW_HTML: dict[str, Any] = {
     },
 }
 
-RAW_COUNTER = {
+RAW_COUNTER: dict[str, Any] = {
     "GXI_BILLING_PRINT_TOTAL_IMP_CNT": 1337,
     "GXI_BILLING_COPY_TOTAL_IMP_CNT": 42,
-}  # type: Dict[str, Any]
+}

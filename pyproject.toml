@@ -48,6 +48,10 @@ strict = true
 module = ["demjson3"]
 ignore_missing_imports = true
 
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
 [dependency-groups]
 dev = [
   "coverage",

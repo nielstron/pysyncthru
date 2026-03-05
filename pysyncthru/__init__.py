@@ -92,12 +92,13 @@ class SyncThru:
                     return res
                 except demjson3.JSONDecodeError as e:
                     # provided by @metalblue
-                    if (
-                        "Line terminator characters must be escaped inside string literals"
-                        in str(e)
-                    ):
+                    error_msg = (
+                        "Line terminator characters must be escaped "
+                        "inside string literals"
+                    )
+                    if error_msg in str(e):
                         # we can fix this and then try again
-                        # go through the raw JSON data and escape all \r and \n inside string literals
+                        # Escape \r and \n inside string literals in the raw payload.
                         new_res_raw = ""
                         inside_literal = False
                         for c in res_raw:

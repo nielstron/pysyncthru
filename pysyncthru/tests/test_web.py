@@ -51,14 +51,14 @@ class SyncthruAPITest(unittest.TestCase):
         # Start test server before running any tests
         self.server_control.start_server()
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.API
                 )
                 await self.syncthru.update()
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         loop.run_until_complete(fetch())
 
     def test_online(self) -> None:
@@ -260,14 +260,14 @@ class SyncthruAPITest2(unittest.TestCase):
         self.server_control.start_server()
         self.server.server_dir = Path(__file__).parent / "test_structure" / "state2"
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.API
                 )
                 await self.syncthru.update()
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         loop.run_until_complete(fetch())
 
     def test_newline_unescaped_status(self) -> None:
@@ -311,14 +311,14 @@ class SyncthruHTMLTest(unittest.TestCase):
         # Start test server before running any tests
         self.server_control.start_server()
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.HTML
                 )
                 await self.syncthru.update()
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         loop.run_until_complete(fetch())
 
     def test_location(self) -> None:
@@ -395,7 +395,7 @@ class NonSyncthruWebTest(unittest.TestCase):
                     )
                     await self.syncthru.update()
 
-            loop = asyncio.get_event_loop()
+            loop = asyncio.new_event_loop()
             loop.run_until_complete(fetch())
             self.fail(
                 "No error thrown when noticing that the host does not support Syncthru"
@@ -413,7 +413,7 @@ class NonSyncthruWebTest(unittest.TestCase):
                 )
                 await self.syncthru.update()
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         loop.run_until_complete(fetch())
         self.assertFalse(self.syncthru.is_online())
         self.assertTrue(self.syncthru.is_unknown_state())

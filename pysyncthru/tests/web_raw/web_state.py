@@ -1,6 +1,6 @@
-from typing import Any, Dict
+from typing import Any
 
-RAW_STATE1 = {
+RAW_STATE1: dict[str, Any] = {
     "status": {
         "hrDeviceStatus": 2,
         "status1": "  Sleeping...   ",
@@ -118,9 +118,9 @@ RAW_STATE1 = {
     "GXI_IMAGING_MAGENTA_VALID": 1,
     "GXI_IMAGING_YELLOW_VALID": 1,
     "GXI_SUPPORT_PAPER_SETTING": 1,
-}  # type: Dict[str, Any]
+}
 
-RAW_HTML = {
+RAW_HTML: dict[str, Any] = {
     "status": {
         "hrDeviceStatus": 1,
     },
@@ -145,7 +145,7 @@ RAW_HTML = {
     "tray4": {
         "opt": 0,
     },
-}  # type: Dict[str, Any]
+}
 
 RAW_COUNTER = {
     "GXI_BILLING_PRINT_TOTAL_IMP_CNT": 1337,

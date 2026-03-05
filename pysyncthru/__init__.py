@@ -2,6 +2,7 @@
 
 import asyncio
 from enum import Enum
+from importlib.metadata import version as package_version
 from typing import Any, Dict, Optional, cast
 
 import aiohttp
@@ -12,6 +13,7 @@ from .htmlparsers import ENDPOINT_HTML_PARSERS
 ENDPOINT_API_BASE = "/sws/app/information"
 PRINTER_ENDPOINT = "/home/home.json"
 COUNTER_ENDPOINT = "/counters/counters.json"
+__version__ = package_version("pysyncthru")
 
 
 class ConnectionMode(Enum):
@@ -79,10 +81,13 @@ class SyncThru:
     def _decode_json_payload(self, res_raw: str) -> Optional[Dict[str, Any]]:
         try:
             return cast(Dict[str, Any], demjson3.decode(res_raw))
-        except demjson3.JSONDecodeError as error:
-            error_msg = "Line terminator characters must be escaped inside string literals"
-            if error_msg in str(error):
-                # Escape \r and \n inside string literals and parse again.
+        except demjson3.JSONDecodeError as e:
+            error_msg = (
+                "Line terminator characters must be escaped "
+                "inside string literals"
+            )
+            if error_msg in str(e):
+                # Escape \r and \n inside string literals in the raw payload.
                 new_res_raw = ""
                 inside_literal = False
                 for char in res_raw:

@@ -2,7 +2,7 @@ import re
 from html.parser import HTMLParser
 from typing import Any, Callable, Dict, List, Tuple, Type
 
-_VARIABLE_DICT = {
+_VARIABLE_DICT: Dict[str, Callable[[str], Dict[str, Any]]] = {
     "BlackTonerPer": lambda x: {
         "toner_black": {"opt": 1, "remaining": int(x), "newError": ""}
     },
@@ -16,7 +16,7 @@ _VARIABLE_DICT = {
     "tray4Installed": lambda x: {
         "tray4": {"opt": 1 if x == "Installed" else 0, "newError": ""}
     },
-}  # type: Dict[str, Callable[[str], Dict[str, Any]]]
+}
 _KNOWN_VARIABLES = "|".join(_VARIABLE_DICT.keys())
 _VARIABLES_REG = (
     r"var\s+(?P<varname>{})\s*=\s*[\"']?(?P<varval>[a-zA-Z0-9]+)[\"']?\s*;".format(

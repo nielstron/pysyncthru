@@ -15,7 +15,7 @@ import time
 import aiohttp
 import asyncio
 from pysyncthru import SyncThru, SyncthruState, ConnectionMode, SyncThruAPINotSupported
-from .web_raw.web_state import RAW_STATE1, RAW_HTML
+from .web_raw.web_state import RAW_STATE1, RAW_HTML, RAW_COUNTER
 
 ADDRESS = "localhost"
 
@@ -210,6 +210,19 @@ class SyncthruAPITest(unittest.TestCase):
 
     def test_cap(self) -> None:
         self.assertEqual(self.syncthru.capability(), RAW_STATE1["capability"])
+
+    def test_raw_counter(self) -> None:
+        self.assertEqual(self.syncthru.raw_counter(), RAW_COUNTER)
+
+    def test_print_count(self) -> None:
+        self.assertEqual(
+            self.syncthru.print_count(), RAW_COUNTER["GXI_BILLING_PRINT_TOTAL_IMP_CNT"]
+        )
+
+    def test_copy_count(self) -> None:
+        self.assertEqual(
+            self.syncthru.copy_count(), RAW_COUNTER["GXI_BILLING_COPY_TOTAL_IMP_CNT"]
+        )
 
     def tearDown(self) -> None:
         self.server_control.stop_server()

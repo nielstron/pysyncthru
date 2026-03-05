@@ -10,7 +10,7 @@ that is provided via the JSON API of the device.
 If the API cannot be reached (because on some printers it is not supported),
 it tries to parse other pages in the webinterface and extract information.
 
-It is able to read the system, toner and tray status and provides method 
+It is able to read the system, toner and tray status and provides method
 wrappers to access them.
 Overall, the following data is usually provided by the printers:
 
@@ -19,7 +19,7 @@ Overall, the following data is usually provided by the printers:
 - Model name
 - Tray status
 
-Sadly it seems like there is no official API, so fixes are welcome and likely 
+Sadly it seems like there is no official API, so fixes are welcome and likely
 needed!
 
 ## Usage
@@ -49,7 +49,7 @@ async def main():
             print("Tray 1 Capacity:", printer.input_tray_status()[1]['capa'])
         # Print all available details from the printer
         print("All data:\n", printer.raw())
-        
-loop = asyncio.get_event_loop()
+
+loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
 ```

@@ -37,5 +37,5 @@ if len(sys.argv) != 2:
     print(f"Usage: {__file__} IP-ADDRESS", file=sys.stderr)
     sys.exit(1)
 
-loop = asyncio.get_event_loop()
+loop = asyncio.new_event_loop()
 loop.run_until_complete(main(sys.argv[1]))

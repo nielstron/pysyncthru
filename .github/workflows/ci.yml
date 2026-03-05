@@ -16,17 +16,11 @@ jobs:
       matrix:
         include:
           - python-version: "3.9"
-            pre-commit: false
           - python-version: "3.10"
-            pre-commit: false
           - python-version: "3.11"
-            pre-commit: false
           - python-version: "3.12"
-            pre-commit: false
           - python-version: "3.13"
-            pre-commit: true
           - python-version: "3.14"
-            pre-commit: false
 
     steps:
       - name: Checkout
@@ -52,11 +46,7 @@ jobs:
           uv sync --group dev
 
       - name: Run pre-commit
-        if: matrix.pre-commit
         run: uv run pre-commit run --all-files
-
-      - name: Run mypy
-        run: uv run mypy --python-version ${{ matrix.python-version }} pysyncthru
 
       - name: Run tests with coverage
         run: uv run coverage run --source=pysyncthru -m pytest

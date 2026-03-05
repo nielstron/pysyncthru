@@ -51,7 +51,7 @@ class SyncthruAPITest(unittest.TestCase):
         # Start test server before running any tests
         self.server_control.start_server()
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.API
@@ -247,7 +247,7 @@ class SyncthruAPITest2(unittest.TestCase):
         self.server_control.start_server()
         self.server.server_dir = Path(__file__).parent / "test_structure" / "state2"
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.API
@@ -298,7 +298,7 @@ class SyncthruHTMLTest(unittest.TestCase):
         # Start test server before running any tests
         self.server_control.start_server()
 
-        async def fetch():
+        async def fetch() -> None:
             async with aiohttp.ClientSession() as session:
                 self.syncthru = SyncThru(
                     self.url, session, connection_mode=ConnectionMode.HTML

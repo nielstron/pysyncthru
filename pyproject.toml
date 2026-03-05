@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PySyncThru"
+version = "0.8.0"
+description = "Automated JSON API based communication with Samsung SyncThru Web Service"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "nielstron", email = "n.muendler@web.de" },
+]
+keywords = ["python", "syncthru", "json", "api", "samsung", "printer"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Object Brokering",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+requires-python = ">=3.9"
+dependencies = [
+  "aiohttp",
+  "demjson3",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["pysyncthru.tests", "pysyncthru.tests.*"]
+
+[tool.setuptools.package-data]
+pysyncthru = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["pysyncthru/tests"]
+
+[tool.mypy]
+follow_imports = "silent"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["demjson3"]
+ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+  "coverage",
+  "coveralls",
+  "mypy>=0.782",
+  "pre-commit",
+  "pytest",
+]

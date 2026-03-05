@@ -2,6 +2,7 @@
 
 import asyncio
 from enum import Enum
+from importlib.metadata import version as package_version
 from typing import Any, Dict, Optional, cast
 
 import aiohttp
@@ -10,6 +11,7 @@ import demjson3
 from .htmlparsers import ENDPOINT_HTML_PARSERS
 
 ENDPOINT_API = "/sws/app/information/home/home.json"
+__version__ = package_version("pysyncthru")
 
 
 class ConnectionMode(Enum):

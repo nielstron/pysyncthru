@@ -37,6 +37,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
       - name: Cache pre-commit
         uses: actions/cache@v4
         with:
@@ -45,32 +48,28 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install coverage coveralls
-          if [ "${{ matrix.pre-commit }}" = "true" ]; then
-            pip install pre-commit
-          fi
-          pip install "mypy>=0.782"
-          pip install -e .
+          uv venv --python ${{ matrix.python-version }}
+          uv sync --group dev
 
       - name: Run pre-commit
         if: matrix.pre-commit
-        run: pre-commit run --all-files
+        run: uv run pre-commit run --all-files
 
       - name: Run mypy
-        run: mypy --python-version ${{ matrix.python-version }} pysyncthru
+        run: uv run mypy --python-version ${{ matrix.python-version }} pysyncthru
 
       - name: Run tests with coverage
-        run: coverage run --source=pysyncthru setup.py test
+        run: uv run coverage run --source=pysyncthru -m pytest
 
       - name: Coverage report
         if: matrix.python-version == '3.13'
-        run: coverage report
+        run: uv run coverage report
 
       - name: Submit to Coveralls
         if: matrix.python-version == '3.13' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github
+        run: uv run coveralls --service=github
 
   publish-pypi:
     runs-on: ubuntu-latest
@@ -85,10 +84,11 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
       - name: Build package
-        run: |
-          pip install build
-          python -m build
+        run: uv build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -115,7 +115,7 @@ jobs:
       - name: Compute tag
         id: tag
         run: |
-          VERSION=$(grep 'version=' setup.py | cut -d '"' -f 2)
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           echo "tag=release-${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
